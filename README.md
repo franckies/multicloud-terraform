@@ -1,2 +1,2 @@
 # multicloud-terraform
-Implementation of a ms infrastructure with terraform on multiple cloud providers.
+Implementation of a 3-tier web application infrastructure with terraform on multiple cloud providers.
