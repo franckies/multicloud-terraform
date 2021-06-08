@@ -1,44 +1,83 @@
 ################################################################################
-# Load Balancer
+# Security groups for External Load Balancer
 ################################################################################
-module "alb" {
-  source  = "terraform-aws-modules/alb/aws"
-  version = "~> 6.0"
+resource "aws_security_group" "3tier-elb-sg" {
+  name = "${var.prefix_name}-elb-sg"
 
-  name = "3-tier-alb"
+  description = "Allow HTTP connection from everywhere"
+  vpc_id      = var.vpc_id
 
+  # Accept from everywhere
+  ingress {
+    from_port        = var.http_port
+    to_port          = var.http_port
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  egress {
+    from_port = var.http_port
+    to_port   = var.http_port
+    protocol  = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = var.https_port
+    to_port   = var.https_port
+    protocol  = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    tags = {
+    Name        = "${var.prefix_name}-elb-sg"
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
+
+################################################################################
+# External Load Balancer
+################################################################################
+resource "aws_alb" "3tier-eloadbalancer" {
+
+  name               = "${var.prefix_name}-eloadbalancer"
+  internal           = false
   load_balancer_type = "application"
-
-  vpc_id          = module.networking.vpc_id
-  subnets         = module.networking.public_subnets
-  security_groups = [aws_security_group.alb_layer_sg.id]
-
-#   access_logs = {
-#     bucket = aws_s3_bucket.alb_access_log.id
-#   }
-
-  target_groups = [
-    {
-      name_prefix      = "3-tier-"
-      backend_protocol = "HTTP"
-      backend_port     = 80
-      target_type      = "instance"
-      stickiness = {
-        enabled         = true
-        cookie_duration = 28800
-        type            = "lb_cookie"
-      }
+  security_groups    = [aws_security_group.3tier-elb-sg.id]
+  subnets            = var.public_subnets
+  tags = {
+      Terraform = "true"
+      Environment = "dev"
     }
-  ]
+}
 
-  http_tcp_listeners = [
-    {
-      port               = 80
-      protocol           = "HTTP"
-      target_group_index = 0
-    }
-  ]
+resource "aws_alb_listener" "3tier-elb-listener" {
+  load_balancer_arn = aws_alb.3tier-iloadbalancer.arn
+  port              = var.http_port
+  protocol          = "HTTP"
+  
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.3tier-elb-target-group.arn
+  }
+}
 
+resource "aws_alb_target_group" "3tier-elb-target-group" {
+  name     = "${var.prefix_name}-target-group"
+  port     = var.http_port
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+  health_check {    
+    healthy_threshold   = 3    
+    unhealthy_threshold = 10    
+    timeout             = 5    
+    interval            = 10    
+    port                = 80 
+  }
   tags = {
       Terraform = "true"
       Environment = "dev"

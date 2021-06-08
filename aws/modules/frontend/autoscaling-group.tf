@@ -1,78 +1,135 @@
 ################################################################################
+# Security groups for Frontend Server
+################################################################################
+resource "aws_security_group" "3tier-frontend-servers-sg" {
+  name = "${var.prefix_name}-servers-sg"
+
+  description = "Allow HTTP, HTTPS and SSH connection from Load Balancer & Bastion"
+  vpc_id      = var.vpc_id
+
+  # Inbound connections from internal LB and Bastion on HTTP / HTTPs and SSH
+  ingress {
+    from_port        = var.http_port
+    to_port          = var.http_port
+    protocol         = "tcp"
+    security_groups = [aws_security_group.3tier-elb-sg.id]
+  }
+  
+  ingress {
+    from_port        = var.https_port
+    to_port          = var.https_port
+    protocol         = "tcp"
+    security_groups = [aws_security_group.3tier-elb-sg.id]
+  }
+
+  ingress {
+    from_port        = var.ssh_port
+    to_port          = var.ssh_port
+    protocol         = "tcp"
+    security_groups = [var.bastion_sg]
+  }
+
+  # All outbound connections on HTTP and HTTPs
+  egress {
+    from_port = var.http_port
+    to_port   = var.http_port
+    protocol  = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = var.https_port
+    to_port   = var.https_port
+    protocol  = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "${var.prefix_name}-servers-sg"
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
+
+################################################################################
+# Key Pairs
+################################################################################
+resource "tls_private_key" "this" {
+  algorithm = "RSA"
+}
+
+module "key_pair" {
+  source = "terraform-aws-modules/key-pair/aws"
+
+  key_name   = "3tier-frontend-key"
+  public_key = tls_private_key.this.public_key_openssh
+}
+
+################################################################################
+# Launch configuration
+################################################################################
+data "template_file" "user_data" {
+  template = file("${path.module}/frontend-app.sh")
+  vars = {
+    DB_NAME     = var.db_name
+    DB_HOSTNAME = var.db_hostname
+    DB_USERNAME = var.db_username
+    DB_PASSWORD = var.db_password
+    LB_HOSTNAME = aws_alb.3tier-iloadbalancer.dns_name
+  }
+}
+
+resource "aws_launch_configuration" "launch-conf" {
+  # Launch Configurations cannot be updated after creation with the AWS API.
+  # In order to update a Launch Configuration, Terraform will destroy the
+  # existing resource and create a replacement.
+  #
+  # We're only setting the name_prefix here,
+  # Terraform will add a random string at the end to keep it unique.
+  name_prefix     = "${var.prefix_name}-worker"
+  #ubuntu ami
+  image_id        = "ami-063d4ab14480ac177" #var.ami
+
+  instance_type   = var.vm_instance_type
+  security_groups = [aws_security_group.3tier-frontend-servers-sg.id]
+  key_name = module.key_pair.key_pair_key_name
+
+  user_data = data.template_file.user_data.rendered
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  # tags = {
+  #   Name        = "${var.prefix_name}-servers"
+  #   Terraform   = "true"
+  #   Environment = "dev"
+  # }
+}
+
+################################################################################
 # Autoscaling group
 ################################################################################
-module "asg" {
-  source  = "terraform-aws-modules/autoscaling/aws"
-  version = "~> 4.0"
+resource "aws_autoscaling_group" "3tier-frontend-autoscaling-group" {
+  # Referencing the launch conf in the name
+  # forces a redeployment when launch configuration changes.
+  # This will reset the desired capacity if it was changed due to
+  # autoscaling events.
+  name                 = "${aws_launch_configuration.launch-conf.name}-asg"
+  launch_configuration = aws_launch_configuration.launch-conf.name
+  min_size             = var.asg_min_size
+  max_size             = var.asg_max_size
+  vpc_zone_identifier  = var.private_subnets
+  target_group_arns    = [aws_alb_target_group.3tier-frontend-lb-target-group.arn]
 
-  # Autoscaling group
-  name = "3-tier-asg"
-
-  min_size                  = 1
-  max_size                  = 2
-  desired_capacity          = 1
-  wait_for_capacity_timeout = 0
-  health_check_type         = "EC2"
-  vpc_zone_identifier       = module.vpc.private_subnets
-
-  instance_refresh = {
-    strategy = "Rolling"
-    preferences = {
-      min_healthy_percentage = 0
-    }
-    triggers = ["tag"]
+  lifecycle {
+    create_before_destroy = true
   }
+}
 
-  # Launch template
-  lt_name                = "3-tier-asg"
-  description            = "3-tier-asg"
-  update_default_version = true
-
-  use_lt                   = true
-  create_lt                = true
-  iam_instance_profile_arn = aws_iam_instance_profile.3-tier_profile.arn
-  image_id                 = data.aws_ami.amazon_linux2.id
-  instance_type            = var.asg_instance_type
-  ebs_optimized            = true
-  enable_monitoring        = true
-
-  block_device_mappings = [
-    {
-      # Root volume
-      device_name = "/dev/xvda"
-      no_device   = 0
-      ebs = {
-        delete_on_termination = true
-        encrypted             = true
-        volume_size           = 30
-        volume_type           = "gp2"
-      }
-    }
-  ]
-
-  metadata_options = {
-    http_endpoint               = "enabled"
-    http_tokens                 = "required"
-    http_put_response_hop_limit = 32
-  }
-
-  network_interfaces = [
-    {
-      delete_on_termination = true
-      description           = "eth0"
-      device_index          = 0
-      security_groups       = [aws_security_group.app_layer_sg.id]
-    }
-  ]
-
-  target_group_arns = module.alb.target_group_arns
-  user_data_base64 = base64encode(templatefile("./scripts/userdata.sh.tpl", {
-    efs_endpoint      = aws_efs_file_system.3-tier_efs.dns_name
-    efs_id            = aws_efs_file_system.3-tier_efs.id
-    database_name     = var.rds_database_name
-    database_endpoint = module.db.this_rds_cluster_endpoint
-    database_username = var.rds_username
-    database_password = module.db.this_rds_cluster_master_password
-    lb_endpoint       = module.alb.lb_dns_name
-  }))
+resource "aws_autoscaling_attachment" "3tier-frontend-asg-attachment" {
+  autoscaling_group_name = aws_autoscaling_group.3tier-frontend-autoscaling-group.id
+  alb_target_group_arn   = aws_alb_target_group.3tier-elb-target-group.arn
 }

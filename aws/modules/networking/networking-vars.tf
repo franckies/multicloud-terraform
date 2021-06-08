@@ -1,6 +1,6 @@
 variable "vpc_name" {
   type         = string
-  default      = "3tier-vpc"
+  default      = "counter-app-vpc"
   description  = "The name of the VPC"
 }
 variable "vpc_cidr" {
