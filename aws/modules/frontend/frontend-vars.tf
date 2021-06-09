@@ -68,3 +68,7 @@ variable "asg_max_size" {
     description  = "Maximum number of VMs within the ASG"
 }
 
+varialbe "apigw_url" {
+  type          = string
+  description   = "The endpoint URL exposed by api gateway"
+}

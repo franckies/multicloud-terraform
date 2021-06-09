@@ -1,7 +1,7 @@
 ################################################################################
-# Security groups for Frontend Server
+# Security groups for Frontend Servers
 ################################################################################
-resource "aws_security_group" "3tier-frontend-servers-sg" {
+resource "aws_security_group" "counter-app-frontend-servers-sg" {
   name = "${var.prefix_name}-servers-sg"
 
   description = "Allow HTTP, HTTPS and SSH connection from Load Balancer & Bastion"
@@ -12,21 +12,21 @@ resource "aws_security_group" "3tier-frontend-servers-sg" {
     from_port        = var.http_port
     to_port          = var.http_port
     protocol         = "tcp"
-    security_groups = [aws_security_group.3tier-elb-sg.id]
+    security_groups = [aws_security_group.counter-app-elb-sg.id]
   }
   
   ingress {
     from_port        = var.https_port
     to_port          = var.https_port
     protocol         = "tcp"
-    security_groups = [aws_security_group.3tier-elb-sg.id]
+    security_groups = [aws_security_group.counter-app-elb-sg.id]
   }
 
   ingress {
     from_port        = var.ssh_port
     to_port          = var.ssh_port
     protocol         = "tcp"
-    security_groups = [var.bastion_sg]
+    security_groups = [module.bastion.security_group_id]
   }
 
   # All outbound connections on HTTP and HTTPs
@@ -63,7 +63,7 @@ resource "tls_private_key" "this" {
 module "key_pair" {
   source = "terraform-aws-modules/key-pair/aws"
 
-  key_name   = "3tier-frontend-key"
+  key_name   = "counter-app-frontend-key"
   public_key = tls_private_key.this.public_key_openssh
 }
 
@@ -71,13 +71,9 @@ module "key_pair" {
 # Launch configuration
 ################################################################################
 data "template_file" "user_data" {
-  template = file("${path.module}/frontend-app.sh")
+  template = file("${path.module}/user-data.sh")
   vars = {
-    DB_NAME     = var.db_name
-    DB_HOSTNAME = var.db_hostname
-    DB_USERNAME = var.db_username
-    DB_PASSWORD = var.db_password
-    LB_HOSTNAME = aws_alb.3tier-iloadbalancer.dns_name
+    REPLACE     = var.apigw_url
   }
 }
 
@@ -90,10 +86,10 @@ resource "aws_launch_configuration" "launch-conf" {
   # Terraform will add a random string at the end to keep it unique.
   name_prefix     = "${var.prefix_name}-worker"
   #ubuntu ami
-  image_id        = "ami-063d4ab14480ac177" #var.ami
+  image_id        = var.ami # "ami-063d4ab14480ac177" 
 
   instance_type   = var.vm_instance_type
-  security_groups = [aws_security_group.3tier-frontend-servers-sg.id]
+  security_groups = [aws_security_group.counter-app-frontend-servers-sg.id]
   key_name = module.key_pair.key_pair_key_name
 
   user_data = data.template_file.user_data.rendered
@@ -112,7 +108,7 @@ resource "aws_launch_configuration" "launch-conf" {
 ################################################################################
 # Autoscaling group
 ################################################################################
-resource "aws_autoscaling_group" "3tier-frontend-autoscaling-group" {
+resource "aws_autoscaling_group" "counter-app-frontend-autoscaling-group" {
   # Referencing the launch conf in the name
   # forces a redeployment when launch configuration changes.
   # This will reset the desired capacity if it was changed due to
@@ -122,14 +118,14 @@ resource "aws_autoscaling_group" "3tier-frontend-autoscaling-group" {
   min_size             = var.asg_min_size
   max_size             = var.asg_max_size
   vpc_zone_identifier  = var.private_subnets
-  target_group_arns    = [aws_alb_target_group.3tier-frontend-lb-target-group.arn]
+  target_group_arns    = [aws_alb_target_group.counter-app-frontend-lb-target-group.arn]
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "aws_autoscaling_attachment" "3tier-frontend-asg-attachment" {
-  autoscaling_group_name = aws_autoscaling_group.3tier-frontend-autoscaling-group.id
-  alb_target_group_arn   = aws_alb_target_group.3tier-elb-target-group.arn
+resource "aws_autoscaling_attachment" "counter-app-frontend-asg-attachment" {
+  autoscaling_group_name = aws_autoscaling_group.counter-app-frontend-autoscaling-group.id
+  alb_target_group_arn   = aws_alb_target_group.counter-app-elb-target-group.arn
 }

@@ -1,7 +1,7 @@
 ################################################################################
 # Security groups for External Load Balancer
 ################################################################################
-resource "aws_security_group" "3tier-elb-sg" {
+resource "aws_security_group" "counter-app-elb-sg" {
   name = "${var.prefix_name}-elb-sg"
 
   description = "Allow HTTP connection from everywhere"
@@ -42,12 +42,12 @@ resource "aws_security_group" "3tier-elb-sg" {
 ################################################################################
 # External Load Balancer
 ################################################################################
-resource "aws_alb" "3tier-eloadbalancer" {
+resource "aws_alb" "counter-app-eloadbalancer" {
 
   name               = "${var.prefix_name}-eloadbalancer"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.3tier-elb-sg.id]
+  security_groups    = [aws_security_group.counter-app-elb-sg.id]
   subnets            = var.public_subnets
   tags = {
       Terraform = "true"
@@ -55,18 +55,18 @@ resource "aws_alb" "3tier-eloadbalancer" {
     }
 }
 
-resource "aws_alb_listener" "3tier-elb-listener" {
-  load_balancer_arn = aws_alb.3tier-iloadbalancer.arn
+resource "aws_alb_listener" "counter-app-elb-listener" {
+  load_balancer_arn = aws_alb.counter-app-iloadbalancer.arn
   port              = var.http_port
   protocol          = "HTTP"
   
   default_action {
     type             = "forward"
-    target_group_arn = aws_alb_target_group.3tier-elb-target-group.arn
+    target_group_arn = aws_alb_target_group.counter-app-elb-target-group.arn
   }
 }
 
-resource "aws_alb_target_group" "3tier-elb-target-group" {
+resource "aws_alb_target_group" "counter-app-elb-target-group" {
   name     = "${var.prefix_name}-target-group"
   port     = var.http_port
   protocol = "HTTP"

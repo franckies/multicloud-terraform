@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Press-me button</title>
+
+    <meta charset="UTF-8">
+    <script src="jquery-3.6.0.min.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div id="wrapper">
+        <a href="#" class="my-super-cool-btn">
+            <div class="dots-container">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <span id="button-text"></span>
+        </a>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function () {
+
+        var url = "apigateway_url"
+
+        $.post(url, '{"operation":"read","id":"1"}', function (data, status) {
+            var counter = data
+        });
+
+        //when the document is finished loading, replace everything
+        //between the <a ...> </a> tags with the value of splitText
+        document.getElementById("button-text").innerHTML = counter;
+
+    });
+
+</script>
