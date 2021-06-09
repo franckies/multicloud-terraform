@@ -1,4 +1,4 @@
-# Substitute $search with $replace
+#!/bin/bash
 SEARCH="apigateway_url"
 REPLACE="${REPLACE}/counter-app-resource"
 

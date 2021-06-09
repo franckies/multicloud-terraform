@@ -71,7 +71,7 @@ module "key_pair" {
 # Launch configuration
 ################################################################################
 data "template_file" "user_data" {
-  template = file("${path.module}/user-data.sh")
+  template = template_file("${path.module}/user-data.sh.tpl")
   vars = {
     REPLACE     = var.apigw_url
   }

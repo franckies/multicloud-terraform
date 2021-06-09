@@ -26,11 +26,11 @@
 <script>
     $(document).ready(function () {
         var counter;
-        var url = "apigateway_url"
+        var api_url = "apigateway_url"
         var databody = '{"operation":"read","id":"1"}'
         $.ajax({
             type: 'POST',
-            url: "https://un66xgefye.execute-api.eu-west-1.amazonaws.com/Prod/counter-app-resource",
+            url: api_url,
             //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
             crossDomain: true,
             contentType: "application/json",
@@ -56,7 +56,7 @@
         console.log(databody)
         $.ajax({
             type: 'POST',
-            url: "https://un66xgefye.execute-api.eu-west-1.amazonaws.com/Prod/counter-app-resource",
+            url: api_url,
             //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
             crossDomain: true,
             contentType: "application/json",
