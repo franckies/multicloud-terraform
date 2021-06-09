@@ -25,17 +25,49 @@
 
 <script>
     $(document).ready(function () {
-
+        var counter;
         var url = "apigateway_url"
-
-        $.post(url, '{"operation":"read","id":"1"}', function (data, status) {
-            var counter = data
+        var databody = '{"operation":"read","id":"1"}'
+        $.ajax({
+            type: 'POST',
+            url: "https://un66xgefye.execute-api.eu-west-1.amazonaws.com/Prod/counter-app-resource",
+            //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+            crossDomain: true,
+            contentType: "application/json",
+            data: databody,
+            dataType: 'json',
+            success: function (data) {
+                var textstring = JSON.stringify(data.message.Item.counter.N);
+                textstring = textstring.replace('"', '')
+                textstring = textstring.replace('"', '')
+                console.log(databody)
+                document.getElementById("button-text").innerHTML = textstring;
+            },
+            error: function (responseData, textStatus, errorThrown) {
+                alert('POST failed.');
+            }
         });
-
-        //when the document is finished loading, replace everything
-        //between the <a ...> </a> tags with the value of splitText
-        document.getElementById("button-text").innerHTML = counter;
-
     });
-
+    $( "#button-text" ).click(function() {
+        var textstring = document.getElementById("button-text").innerHTML;
+        var textnum = parseInt(textstring) + 1;
+        textstring = textnum.toString()
+        var databody = '{"operation":"write","id":"1", "counter":"' + textstring + '"}';
+        console.log(databody)
+        $.ajax({
+            type: 'POST',
+            url: "https://un66xgefye.execute-api.eu-west-1.amazonaws.com/Prod/counter-app-resource",
+            //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+            crossDomain: true,
+            contentType: "application/json",
+            data: databody,
+            dataType: 'json',
+            success: function (data) {
+                document.getElementById("button-text").innerHTML = textstring;
+            },
+            error: function (responseData, textStatus, errorThrown) {
+                alert('POST failed.');
+            }
+        });
+});
 </script>

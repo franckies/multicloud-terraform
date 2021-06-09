@@ -16,7 +16,7 @@ variable "private_subnets" {
 
 variable "prefix_name" {
     type         = string
-    default      = "3tier-app"
+    default      = "counter-app"
     description  = "Prefix name for application layer"
 }
 
@@ -38,11 +38,11 @@ variable "ssh_port" {
     description  = "The ssh port"
 }
 
-# variable "key_name" {
-#     type         = string
-#     default      = "ec2-hawordpress"
-#     description  = "The name of private key to access the VMs through SSH"
-# }
+variable "key_name" {
+    type         = string
+    default      = "ec2-hawordpress"
+    description  = "The name of private key to access the VMs through SSH"
+}
 
 variable "ami" {
     type         = string
@@ -58,7 +58,7 @@ variable "vm_instance_type" {
 
 variable "asg_min_size" {
     type         = number
-    default      = 2
+    default      = 1
     description  = "Minimum number of VMs within the ASG"
 }
 
@@ -68,7 +68,7 @@ variable "asg_max_size" {
     description  = "Maximum number of VMs within the ASG"
 }
 
-varialbe "apigw_url" {
+variable "apigw_url" {
   type          = string
   description   = "The endpoint URL exposed by api gateway"
 }

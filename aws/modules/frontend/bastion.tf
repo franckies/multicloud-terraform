@@ -10,7 +10,7 @@ module "bastion" {
   vpc_id         = var.vpc_id
   public_subnets = var.public_subnets
 
-  ssh_key_name   = var.key_name
+  ssh_key_name   = module.key_pair.key_pair_key_name
 
   bastion_instance_types= [var.vm_instance_type]
 

@@ -39,6 +39,11 @@ exports.handler = async (event) => {
         
 				var response = {
 					'statusCode': 200,
+					headers: {
+						"Access-Control-Allow-Headers" : "application/json",
+						"Access-Control-Allow-Origin": "*",
+						"Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+					},
 					'body': JSON.stringify({
 						message: msg
 					})
@@ -70,6 +75,11 @@ exports.handler = async (event) => {
         
 				var response = {
 					'statusCode': 200,
+					headers: {
+						"Access-Control-Allow-Headers" : "application/json",
+						"Access-Control-Allow-Origin": "*",
+						"Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+					},
 					'body': JSON.stringify({
 						message: data
 					})
@@ -78,6 +88,11 @@ exports.handler = async (event) => {
 			else{
 				var response = {
 					'statusCode': 200,
+					headers: {
+						"Access-Control-Allow-Headers" : "application/json",
+						"Access-Control-Allow-Origin": "*",
+						"Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+					},
 					'body': JSON.stringify({
 						message: "Invalid operation"
 					})

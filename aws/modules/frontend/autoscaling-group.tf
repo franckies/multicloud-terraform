@@ -118,7 +118,7 @@ resource "aws_autoscaling_group" "counter-app-frontend-autoscaling-group" {
   min_size             = var.asg_min_size
   max_size             = var.asg_max_size
   vpc_zone_identifier  = var.private_subnets
-  target_group_arns    = [aws_alb_target_group.counter-app-frontend-lb-target-group.arn]
+  target_group_arns    = [aws_alb_target_group.counter-app-elb-target-group.arn]
 
   lifecycle {
     create_before_destroy = true

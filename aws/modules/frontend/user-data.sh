@@ -1,19 +1,22 @@
 # Substitute $search with $replace
 SEARCH="apigateway_url"
-REPLACE="${apigw_url}/counter-app-resource"
+REPLACE="${REPLACE}/counter-app-resource"
 
-sudo apt-get update -y
+mv /home/ubuntu
+touch test.txt
+apt-get update -y
 
-sudo apt-get install nginx -y
+apt-get install nginx -y
+apt-get install git -y
+apt-get install curl -y
 
+curl -X POST -d '{"operation":"write","id":"1","counter":"0"}' $REPLACE
 
-mv /usr/share/nginx/html/index.html /usr/share/nginx/html/old-index.html
+git clone https://github.com/franckies/multicloud-terraform.git
 
-sudo git clone https://github.com/franckies/multicloud-terraform.git
+cp multicloud-terraform/aws/modules/frontend/frontend-app/* /var/www/html
 
-mv multicloud-terraform/aws/modules/frontend/frontend-app /usr/share/nginx/html
+sed -i "s/$SEARCH/$REPLACE/gi" /var/www/html/index.html
 
-sed -i "s/$SEARCH/$REPLACE/gi" /usr/share/nginx/html/index.html
-
-sudo service nginx start
+service nginx start
 

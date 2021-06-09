@@ -56,7 +56,7 @@ resource "aws_alb" "counter-app-eloadbalancer" {
 }
 
 resource "aws_alb_listener" "counter-app-elb-listener" {
-  load_balancer_arn = aws_alb.counter-app-iloadbalancer.arn
+  load_balancer_arn = aws_alb.counter-app-eloadbalancer.arn
   port              = var.http_port
   protocol          = "HTTP"
   

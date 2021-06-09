@@ -113,5 +113,3 @@ resource "aws_lambda_permission" "apigw" {
    source_arn = "${aws_api_gateway_rest_api.apiLambda.execution_arn}/Prod/POST/counter-app-resource"
 
 }
-
-
