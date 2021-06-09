@@ -20,3 +20,9 @@ sed -i "s/$SEARCH/$REPLACE/gi" /var/www/html/index.html
 
 service nginx start
 
+
+sudo amazon-linux-extras install nginx1.12 -y
+sudo yum install git -y
+git clone https://github.com/franckies/multicloud-terraform.git
+sudo service nginx start
+sudo mv /home/ec2-user/multicloud-terraform/aws/modules/frontend/frontend-app/* /usr/share/nginx/html
