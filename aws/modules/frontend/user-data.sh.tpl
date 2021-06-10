@@ -1,5 +1,4 @@
 #!/bin/bash -xe
-SEARCH='apigateway_url'
 REPLACE='${REPLACE}'
 
 # Install httpd

@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
     <script src="jquery-3.6.0.min.js"></script>
-    <script src = "api_url.js"></script>
+    <script src="api_url.js"></script>
     <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -44,11 +44,11 @@
             }
         });
     });
-    $( "#button-text" ).click(function() {
+    $("#button-text").click(function () {
         var textstring = document.getElementById("button-text").innerHTML;
         var databody = '{"counter":"1"}';
         // Init counter if it is empty
-        if(textstring == ""){
+        if (textstring == "") {
             $.ajax({
                 type: 'POST',
                 url: api_url,
@@ -66,7 +66,7 @@
             });
         }
         else {
-            var textnum = parseInt(textstring) + 1;
+            var textnum = parseInt(textstring);
             textstring = textnum.toString()
             var databody = '{"counter":"' + textstring + '"}';
             console.log(databody)
@@ -79,6 +79,9 @@
                 dataType: 'json',
                 success: function (data) {
                     console.log(JSON.stringify(data.message))
+                    var textstring = JSON.stringify(data.message.Item.counter.N);
+                    textstring = textstring.replace('"', '');
+                    textstring = textstring.replace('"', '');
                     document.getElementById("button-text").innerHTML = textstring;
                 },
                 error: function (responseData, textStatus, errorThrown) {
@@ -87,5 +90,5 @@
             });
         }
 
-});
+    });
 </script>

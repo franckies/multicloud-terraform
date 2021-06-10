@@ -43,14 +43,18 @@ exports.handler = async (event) => {
 			var obj = JSON.parse(event.body);
 
 			//Take number to insert into DB
-			var counter_num = obj.counter;
+			var counter_str = obj.counter;
+
+			//Application logic
+			var counter_num = parseInt(counter_str) + 1;
+			counter_str = counter_num.toString()
 
 			//Format DB input
 			var params = {
 				TableName: 'counter-app-table',
 				Item: {
 					id: { N: "1" },
-					counter: { N: counter_num }
+					counter: { N: counter_str }
 				}
 
 			};
@@ -78,7 +82,7 @@ exports.handler = async (event) => {
 					"Access-Control-Allow-Methods": "OPTIONS,POST,GET"
 				},
 				'body': JSON.stringify({
-					message: msg
+					message: data
 				})
 			};
 		}
