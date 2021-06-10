@@ -1,4 +1,4 @@
 output "table_arn" {
-  description = "The ARN of the dynamoDB table"
-  value       = aws_dynamodb_table.counter-app-table.arn
+  description = "The ARN of the dynamoDB table."
+  value       = module.dynamodb_table.dynamodb_table_arn
 }

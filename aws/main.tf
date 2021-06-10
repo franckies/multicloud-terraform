@@ -38,15 +38,15 @@ module "frontend" {
   intra_subnets         = module.networking.intra_subnets  
 
   apigw_url             = module.backend.api_url
-  #prefix_name           =
-  #http_port             = 
-  #https_port            =
-  #ssh_port              =
-  #ami                   =
-  #vm_instance_type      =
+  #prefix_name          =
+  #http_port            = 
+  #https_port           =
+  #ssh_port             =
+  #ami                  =
+  #vm_instance_type     =
 
-  #asg_min_size          = 
-  #asg_max_size          = 
+  #asg_min_size         = 
+  #asg_max_size         = 
 }
 
 module "backend" {
@@ -63,7 +63,7 @@ module "backend" {
 }
 
 output "api_gateway_url" {
-  value = module.backend.base_url
+  value = module.backend.api_url
 }
 output "load_balancer_url" {
   value = module.frontend.lb_dns

@@ -15,19 +15,21 @@ variable "private_subnets" {
 }
 
 variable "dynamo_table_arn" {
-  description = "The ARN of the dynamoDB table"
+  description = "The ARN of the dynamoDB table."
 }
 
 variable "vpc_endpoint_id" {
-  description = "The VPC endpoint associated to the apigw"
+  description = "The VPC endpoint associated to the apigw."
 }
 
 variable "region" {
-  type = string
-  default = "eu-west-1"
+  type        = string
+  default     = "eu-west-1"
+  description = "The region where the associated VPC is."
 }
 
 variable "stage_name" {
-  type = string
-  default = "dev"
+  type        = string
+  default     = "dev"
+  description = "The stage name of the endpoint."
 }
