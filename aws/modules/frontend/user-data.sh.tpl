@@ -1,11 +1,21 @@
-#!/bin/bash
+#!/bin/bash -xe
 SEARCH='apigateway_url'
 REPLACE='${REPLACE}/counter-app-resource'
 
+# Install httpd
+sudo yum update -y
+sudo yum install -y httpd
+sudo service httpd start
 cd /home/ec2-user
-sudo amazon-linux-extras install nginx1.12 -y
-sudo yum install git -y
+
+# Install front end app
+sudo yum install -y git 
 git clone https://github.com/franckies/multicloud-terraform.git
-sudo service nginx start
-sudo cp /home/ec2-user/multicloud-terraform/aws/modules/frontend/frontend-app/* /usr/share/nginx/html
+sudo chmod go+rw /var/www/html
+sudo cp /home/ec2-user/multicloud-terraform/aws/modules/frontend/frontend-app/* /var/www/html
 sed -i "s/$SEARCH/$REPLACE/gi" /var/www/html/index.html
+
+# Restart httpd
+sudo chkconfig httpd on
+sudo service httpd start
+sudo service httpd restart

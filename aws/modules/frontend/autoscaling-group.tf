@@ -71,7 +71,7 @@ module "key_pair" {
 # Launch configuration
 ################################################################################
 data "template_file" "user_data" {
-  template = template_file("${path.module}/user-data.sh.tpl")
+  template = file("${path.module}/user-data.sh.tpl")
   vars = {
     REPLACE     = var.apigw_url
   }
@@ -84,10 +84,10 @@ resource "aws_launch_configuration" "launch-conf" {
   #
   # We're only setting the name_prefix here,
   # Terraform will add a random string at the end to keep it unique.
+  # Terraform will add a random string at the end to keep it unique.
   name_prefix     = "${var.prefix_name}-worker"
   #ubuntu ami
-  image_id        = var.ami # "ami-0ac43988dfd31ab9a" 
-
+  image_id        = "ami-063d4ab14480ac177" #var.ami
   instance_type   = var.vm_instance_type
   security_groups = [aws_security_group.counter-app-frontend-servers-sg.id]
   key_name = module.key_pair.key_pair_key_name
