@@ -26,67 +26,64 @@
 
 <script>
     $(document).ready(function () {
-        var counter;
-        //var api_url = "apigateway_url"
-        var databody = '{"operation":"read","id":"1"}'
         $.ajax({
-            type: 'POST',
+            type: 'GET',
             url: api_url,
-            //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
             crossDomain: true,
             contentType: "application/json",
             data: databody,
             dataType: 'json',
             success: function (data) {
+                console.log(JSON.stringify(data.message));
                 var textstring = JSON.stringify(data.message.Item.counter.N);
-                textstring = textstring.replace('"', '')
-                textstring = textstring.replace('"', '')
-                console.log(databody)
+                textstring = textstring.replace('"', '');
+                textstring = textstring.replace('"', '');
                 document.getElementById("button-text").innerHTML = textstring;
             },
             error: function (responseData, textStatus, errorThrown) {
+                console.log("GET failed.")
             }
         });
     });
     $( "#button-text" ).click(function() {
-        //var api_url = "apigateway_url";
         var textstring = document.getElementById("button-text").innerHTML;
+        var databody = '{"counter":"1"}';
+        // Init counter if it is empty
         if(textstring == ""){
             $.ajax({
                 type: 'POST',
                 url: api_url,
-                //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
                 crossDomain: true,
                 contentType: "application/json",
-                data: '{"operation":"write","id":"1", "counter":"1"}',
+                data: databody,
                 dataType: 'json',
                 success: function (data) {
-                    console.log(databody)
+                    console.log(JSON.stringify(data.message))
                     document.getElementById("button-text").innerHTML = "1";
                 },
                 error: function (responseData, textStatus, errorThrown) {
-                    alert('POST failed.');
+                    console.log('POST failed.');
                 }
             });
         }
         else {
             var textnum = parseInt(textstring) + 1;
             textstring = textnum.toString()
-            var databody = '{"operation":"write","id":"1", "counter":"' + textstring + '"}';
+            var databody = '{"counter":"' + textstring + '"}';
             console.log(databody)
             $.ajax({
                 type: 'POST',
                 url: api_url,
-                //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
                 crossDomain: true,
                 contentType: "application/json",
                 data: databody,
                 dataType: 'json',
                 success: function (data) {
+                    console.log(JSON.stringify(data.message))
                     document.getElementById("button-text").innerHTML = textstring;
                 },
                 error: function (responseData, textStatus, errorThrown) {
-                    alert('POST failed.');
+                    console.log('POST failed.');
                 }
             });
         }

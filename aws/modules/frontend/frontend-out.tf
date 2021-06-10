@@ -5,9 +5,5 @@ output "bastion_sg" {
 
 output "lb_dns" {
   description = "The DNS name of the external load balancer"
-  value       = aws_alb.counter-app-eloadbalancer.dns_name
-}
-
-output "frontend_sg"{
-  value = aws_security_group.counter-app-frontend-servers-sg.id
+  value       = "https://${aws_alb.counter-app-eloadbalancer.dns_name}"
 }
