@@ -6,6 +6,7 @@
 
     <meta charset="UTF-8">
     <script src="jquery-3.6.0.min.js"></script>
+    <script src = "api_url.js"></script>
     <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -26,7 +27,7 @@
 <script>
     $(document).ready(function () {
         var counter;
-        var api_url = "apigateway_url"
+        //var api_url = "apigateway_url"
         var databody = '{"operation":"read","id":"1"}'
         $.ajax({
             type: 'POST',
@@ -48,7 +49,7 @@
         });
     });
     $( "#button-text" ).click(function() {
-        var api_url = "apigateway_url";
+        //var api_url = "apigateway_url";
         var textstring = document.getElementById("button-text").innerHTML;
         var textnum = parseInt(textstring) + 1;
         textstring = textnum.toString()
