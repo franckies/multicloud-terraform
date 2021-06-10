@@ -40,7 +40,8 @@ exports.handler = async (event) => {
 				var response = {
 					'statusCode': 200,
 					headers: {
-						"Access-Control-Allow-Headers" : "application/json",
+						"Content-Type": 'application/json',
+						//"Access-Control-Allow-Headers" : "application/json",
 						"Access-Control-Allow-Origin": "*",
 						"Access-Control-Allow-Methods": "OPTIONS,POST,GET"
 					},
@@ -76,7 +77,8 @@ exports.handler = async (event) => {
 				var response = {
 					'statusCode': 200,
 					headers: {
-						"Access-Control-Allow-Headers" : "application/json",
+						"Content-Type": 'application/json',
+						//"Access-Control-Allow-Headers" : "application/json",
 						"Access-Control-Allow-Origin": "*",
 						"Access-Control-Allow-Methods": "OPTIONS,POST,GET"
 					},
@@ -89,7 +91,8 @@ exports.handler = async (event) => {
 				var response = {
 					'statusCode': 200,
 					headers: {
-						"Access-Control-Allow-Headers" : "application/json",
+						"Content-Type": 'application/json',
+						//"Access-Control-Allow-Headers" : "application/json",
 						"Access-Control-Allow-Origin": "*",
 						"Access-Control-Allow-Methods": "OPTIONS,POST,GET"
 					},

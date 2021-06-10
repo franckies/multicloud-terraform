@@ -22,3 +22,4 @@ module "dynamodb_table" {
     Environment = "dev"
   }
 }
+

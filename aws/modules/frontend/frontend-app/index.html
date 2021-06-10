@@ -51,24 +51,44 @@
     $( "#button-text" ).click(function() {
         //var api_url = "apigateway_url";
         var textstring = document.getElementById("button-text").innerHTML;
-        var textnum = parseInt(textstring) + 1;
-        textstring = textnum.toString()
-        var databody = '{"operation":"write","id":"1", "counter":"' + textstring + '"}';
-        console.log(databody)
-        $.ajax({
-            type: 'POST',
-            url: api_url,
-            //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-            crossDomain: true,
-            contentType: "application/json",
-            data: databody,
-            dataType: 'json',
-            success: function (data) {
-                document.getElementById("button-text").innerHTML = textstring;
-            },
-            error: function (responseData, textStatus, errorThrown) {
-                alert('POST failed.');
-            }
-        });
+        if(textstring == ""){
+            $.ajax({
+                type: 'POST',
+                url: api_url,
+                //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                crossDomain: true,
+                contentType: "application/json",
+                data: '{"operation":"write","id":"1", "counter":"1"}',
+                dataType: 'json',
+                success: function (data) {
+                    document.getElementById("button-text").innerHTML = textstring;
+                },
+                error: function (responseData, textStatus, errorThrown) {
+                    alert('POST failed.');
+                }
+            });
+        }
+        else {
+            var textnum = parseInt(textstring) + 1;
+            textstring = textnum.toString()
+            var databody = '{"operation":"write","id":"1", "counter":"' + textstring + '"}';
+            console.log(databody)
+            $.ajax({
+                type: 'POST',
+                url: api_url,
+                //headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                crossDomain: true,
+                contentType: "application/json",
+                data: databody,
+                dataType: 'json',
+                success: function (data) {
+                    document.getElementById("button-text").innerHTML = textstring;
+                },
+                error: function (responseData, textStatus, errorThrown) {
+                    alert('POST failed.');
+                }
+            });
+        }
+
 });
 </script>

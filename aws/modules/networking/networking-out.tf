@@ -22,3 +22,8 @@ output "intra_subnets" {
   description = "The intra subnets ids."
   value       = module.vpc.intra_subnets
 }
+
+output "vpc_endpoint_id" {
+  description = "The VPC endpoint id for api gw communication."
+  value       = aws_vpc_endpoint.apigw-endpoint.id
+}

@@ -22,6 +22,7 @@ module "networking" {
   #private_subnets       =
   #public_subnets        =
   #intra_subnets         =
+  frontend_sg_id         = module.frontend.frontend_sg
 }
 
 module "data" {
@@ -36,7 +37,7 @@ module "frontend" {
   public_subnets        = module.networking.public_subnets
   intra_subnets         = module.networking.intra_subnets  
 
-  apigw_url             = module.backend.base_url
+  apigw_url             = module.backend.api_url
   #prefix_name           =
   #http_port             = 
   #https_port            =
@@ -57,6 +58,8 @@ module "backend" {
   intra_subnets         = module.networking.intra_subnets  
 
   dynamo_table_arn      = module.data.table_arn
+
+  vpc_endpoint_id       = module.networking.vpc_endpoint_id
 }
 
 output "api_gateway_url" {

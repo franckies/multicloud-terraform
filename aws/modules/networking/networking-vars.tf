@@ -28,3 +28,17 @@ variable "public_subnets" {
     default     = ["192.168.0.0/24", "192.168.1.0/24"]
     description = "Public subnets CIDR (one per az), where the external load balancer will be deployed"
 }
+variable "frontend_sg_id" {
+    type        = string
+    description = "ID of frontend security group"
+}
+variable "http_port" {
+    type         = number
+    default      = 80
+    description  = "The http port"
+}
+variable "https_port" {
+    type         = number
+    default      = 443
+    description  = "The http port"
+}
