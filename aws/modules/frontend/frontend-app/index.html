@@ -61,6 +61,10 @@
                 data: '{"operation":"write","id":"1", "counter":"1"}',
                 dataType: 'json',
                 success: function (data) {
+                    var textstring = JSON.stringify(data.message.Item.counter.N);
+                    textstring = textstring.replace('"', '')
+                    textstring = textstring.replace('"', '')
+                    console.log(databody)
                     document.getElementById("button-text").innerHTML = textstring;
                 },
                 error: function (responseData, textStatus, errorThrown) {
@@ -82,10 +86,6 @@
                 data: databody,
                 dataType: 'json',
                 success: function (data) {
-                    var textstring = JSON.stringify(data.message.Item.counter.N);
-                    textstring = textstring.replace('"', '')
-                    textstring = textstring.replace('"', '')
-                    console.log(databody)
                     document.getElementById("button-text").innerHTML = textstring;
                 },
                 error: function (responseData, textStatus, errorThrown) {
