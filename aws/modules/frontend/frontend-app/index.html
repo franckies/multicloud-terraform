@@ -61,11 +61,8 @@
                 data: '{"operation":"write","id":"1", "counter":"1"}',
                 dataType: 'json',
                 success: function (data) {
-                    var textstring = JSON.stringify(data.message.Item.counter.N);
-                    textstring = textstring.replace('"', '')
-                    textstring = textstring.replace('"', '')
                     console.log(databody)
-                    document.getElementById("button-text").innerHTML = textstring;
+                    document.getElementById("button-text").innerHTML = "1";
                 },
                 error: function (responseData, textStatus, errorThrown) {
                     alert('POST failed.');
