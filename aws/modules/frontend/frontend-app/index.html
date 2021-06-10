@@ -79,7 +79,7 @@
                 dataType: 'json',
                 success: function (data) {
                     console.log(JSON.stringify(data.message))
-                    var textstring = JSON.stringify(data.message.Item.counter.N);
+                    var textstring = JSON.stringify(data.message);
                     textstring = textstring.replace('"', '');
                     textstring = textstring.replace('"', '');
                     document.getElementById("button-text").innerHTML = textstring;

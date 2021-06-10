@@ -82,7 +82,7 @@ exports.handler = async (event) => {
 					"Access-Control-Allow-Methods": "OPTIONS,POST,GET"
 				},
 				'body': JSON.stringify({
-					message: data
+					message: counter_str
 				})
 			};
 		}
