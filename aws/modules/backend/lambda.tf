@@ -56,18 +56,13 @@ resource "aws_lambda_function" "counterUpdate" {
   role             = aws_iam_role.role_for_LDC.arn
   handler          = "backend-app.handler"
   runtime          = "nodejs12.x"
-
-  #  vpc_config {
-  #   subnet_ids         = [aws_subnet.subnet_for_lambda.id]
-  #   security_group_ids = [aws_security_group.sg_for_lambda.id]
-  # }
 }
 
 
 # The REST API is the container for all the other API Gateway objects we will 
 # create.
 resource "aws_api_gateway_rest_api" "apiLambda" {
-  name   = "counter-app-api"
+  name = "counter-app-api"
 }
 
 
@@ -112,7 +107,7 @@ resource "aws_api_gateway_integration" "get-lambda-integration" {
   resource_id = aws_api_gateway_resource.counter-app-resource.id
   http_method = aws_api_gateway_method.get-method.http_method
 
-  integration_http_method = "POST"
+  integration_http_method = "POST" # https://github.com/hashicorp/terraform/issues/9271 Lambda requires POST as the integration type
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.counterUpdate.invoke_arn
 

@@ -5,5 +5,5 @@ output "bastion_sg" {
 
 output "lb_dns" {
   description = "The DNS name of the external load balancer"
-  value       = "https://${aws_alb.counter-app-eloadbalancer.dns_name}"
+  value       = "http://${aws_alb.counter-app-eloadbalancer.dns_name}"
 }
