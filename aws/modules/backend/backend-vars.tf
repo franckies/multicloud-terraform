@@ -23,3 +23,21 @@ variable "stage_name" {
   default     = "dev"
   description = "The stage name of the endpoint."
 }
+
+variable "prefix_name" {
+    type         = string
+    default      = "counter-app"
+    description  = "Prefix name for application layer."
+}
+
+variable "http_port" {
+    type         = number
+    default      = 80
+    description  = "The http port."
+}
+
+variable "https_port" {
+    type         = number
+    default      = 443
+    description  = "The http port."
+}
