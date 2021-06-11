@@ -1,0 +1,30 @@
+variable "resource_group_name" {
+  type         = string
+  default      = "cloud-semeraro-tesina"
+  description  = "Name of the resource group in use."
+}
+variable "region" {
+  type         = string
+  default      = "westeurope"
+  description  = "Region where deploying resources."
+}
+variable "vnet_cidr" {
+    type        = string
+    default     = "192.168.0.0/16"
+    description = "The CIDR of the VPC."
+}
+variable "private_subnets" {
+    type        = list(string)
+    default     = ["192.168.2.0/24"]
+    description = "Private subnet CIDR where the front end layer will be deployed."
+}
+variable "intra_subnets" {
+    type        = list(string)
+    default     = ["192.168.1.0/24"]
+    description = "Intra subnet CIDR where the lambda function will be deployed."
+}
+variable "public_subnets" {
+    type        = list(string)
+    default     = ["192.168.0.0/24"]
+    description = "Public subnet CIDR where the bastion and application load balancer will be deployed."
+}

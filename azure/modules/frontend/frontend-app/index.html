@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Press-me button</title>
+
+    <meta charset="UTF-8">
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="api_url.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div id="wrapper">
+        <a href="#" class="my-super-cool-btn">
+            <div class="dots-container">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <span id="button-text"></span>
+        </a>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: api_url,
+            crossDomain: true,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (data) {
+                console.log(JSON.stringify(data.message));
+                var textstring = JSON.stringify(data.message.Item.counter.N);
+                textstring = textstring.replace('"', '');
+                textstring = textstring.replace('"', '');
+                document.getElementById("button-text").innerHTML = textstring;
+            },
+            error: function (responseData, textStatus, errorThrown) {
+                console.log("GET failed.")
+            }
+        });
+    });
+    $("#button-text").click(function () {
+        var textstring = document.getElementById("button-text").innerHTML;
+        var databody = '{"counter":"1"}';
+        // Init counter if it is empty
+        if (textstring == "") {
+            $.ajax({
+                type: 'POST',
+                url: api_url,
+                crossDomain: true,
+                contentType: "application/json",
+                data: databody,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(JSON.stringify(data.message))
+                    document.getElementById("button-text").innerHTML = "1";
+                },
+                error: function (responseData, textStatus, errorThrown) {
+                    console.log('POST failed.');
+                }
+            });
+        }
+        else {
+            var textnum = parseInt(textstring);
+            textstring = textnum.toString()
+            var databody = '{"counter":"' + textstring + '"}';
+            console.log(databody)
+            $.ajax({
+                type: 'POST',
+                url: api_url,
+                crossDomain: true,
+                contentType: "application/json",
+                data: databody,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(JSON.stringify(data.message))
+                    var textstring = JSON.stringify(data.message);
+                    textstring = textstring.replace('"', '');
+                    textstring = textstring.replace('"', '');
+                    document.getElementById("button-text").innerHTML = textstring;
+                },
+                error: function (responseData, textStatus, errorThrown) {
+                    console.log('POST failed.');
+                }
+            });
+        }
+
+    });
+</script>

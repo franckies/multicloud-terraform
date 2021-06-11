@@ -1,16 +1,27 @@
 #============================= PROVIDER CONFIG =================================
 terraform {
   required_providers {
-    aws = {
-      source             = "hashicorp/azurerm"
-      version            = "~>2.0"
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=2.63.0"
     }
   }
 }
 
-# Configure the AWS Provider
+# Configure the Microsoft Azure Provider
 provider "azurerm" {
-  features                 = {}
+  skip_provider_registration = true
+  features {}
 }
 
+
 #============================= MODULES IMPORT ==================================
+module "networking" {
+  source                 = "./modules/networking"
+  #vpc_name              = 
+  #vpc_cidr              =
+  #azs                   =
+  #private_subnets       =
+  #public_subnets        =
+  #intra_subnets         =
+}
