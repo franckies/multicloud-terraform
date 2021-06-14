@@ -2,7 +2,7 @@
 # DynamoDB
 ################################################################################
 module "dynamodb_table" {
-  source   = "terraform-aws-modules/dynamodb-table/aws"
+  source = "terraform-aws-modules/dynamodb-table/aws"
 
   name     = "counter-app-table"
   hash_key = "id"

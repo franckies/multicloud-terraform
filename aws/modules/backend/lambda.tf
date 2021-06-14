@@ -47,8 +47,8 @@ resource "aws_iam_role_policy" "lambda_policy" {
 
 # Policy to allow lambda to be deployed in VPC
 resource "aws_iam_role_policy_attachment" "AWSLambdaVPCAccessExecutionRole" {
-    role       = aws_iam_role.counter-app-lambda-role.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+  role       = aws_iam_role.counter-app-lambda-role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 ################################################################################
@@ -76,7 +76,7 @@ resource "aws_security_group" "counter-app-lambda-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-    tags = {
+  tags = {
     Name        = "${var.prefix_name}-lambda-sg"
     Terraform   = "true"
     Environment = "dev"

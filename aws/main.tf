@@ -2,20 +2,20 @@
 terraform {
   required_providers {
     aws = {
-      source             = "hashicorp/aws"
-      version            = "~> 3.0"
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
     }
   }
 }
 
 # Configure the AWS Provider
 provider "aws" {
-  region                 = "eu-west-1"
+  region = "eu-west-1"
 }
 
 #============================= MODULES IMPORT ==================================
 module "networking" {
-  source                 = "./modules/networking"
+  source = "./modules/networking"
   #vpc_name              = 
   #vpc_cidr              =
   #azs                   =
@@ -25,18 +25,18 @@ module "networking" {
 }
 
 module "data" {
-  source                = "./modules/data"
+  source = "./modules/data"
 }
 
 module "frontend" {
-  source                = "./modules/frontend"
+  source = "./modules/frontend"
 
-  vpc_id                = module.networking.vpc_id
-  private_subnets       = module.networking.private_subnets
-  public_subnets        = module.networking.public_subnets
-  intra_subnets         = module.networking.intra_subnets  
+  vpc_id          = module.networking.vpc_id
+  private_subnets = module.networking.private_subnets
+  public_subnets  = module.networking.public_subnets
+  intra_subnets   = module.networking.intra_subnets
 
-  apigw_url             = module.backend.base_url
+  apigw_url = module.backend.base_url
   #prefix_name          =
   #http_port            = 
   #https_port           =
@@ -49,14 +49,14 @@ module "frontend" {
 }
 
 module "backend" {
-  source                = "./modules/backend"
+  source = "./modules/backend"
 
-  vpc_id                = module.networking.vpc_id
-  private_subnets       = module.networking.private_subnets
-  public_subnets        = module.networking.public_subnets
-  intra_subnets         = module.networking.intra_subnets  
+  vpc_id          = module.networking.vpc_id
+  private_subnets = module.networking.private_subnets
+  public_subnets  = module.networking.public_subnets
+  intra_subnets   = module.networking.intra_subnets
 
-  dynamo_table_arn      = module.data.table_arn
+  dynamo_table_arn = module.data.table_arn
 
 }
 

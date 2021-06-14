@@ -9,23 +9,23 @@ resource "aws_security_group" "counter-app-frontend-servers-sg" {
 
   # Inbound connections from internal LB and Bastion on HTTP / HTTPs and SSH
   ingress {
-    from_port        = var.http_port
-    to_port          = var.http_port
-    protocol         = "tcp"
-    security_groups = [aws_security_group.counter-app-elb-sg.id]
-  }
-  
-  ingress {
-    from_port        = var.https_port
-    to_port          = var.https_port
-    protocol         = "tcp"
+    from_port       = var.http_port
+    to_port         = var.http_port
+    protocol        = "tcp"
     security_groups = [aws_security_group.counter-app-elb-sg.id]
   }
 
   ingress {
-    from_port        = var.ssh_port
-    to_port          = var.ssh_port
-    protocol         = "tcp"
+    from_port       = var.https_port
+    to_port         = var.https_port
+    protocol        = "tcp"
+    security_groups = [aws_security_group.counter-app-elb-sg.id]
+  }
+
+  ingress {
+    from_port       = var.ssh_port
+    to_port         = var.ssh_port
+    protocol        = "tcp"
     security_groups = [module.bastion.security_group_id]
   }
 
@@ -73,7 +73,7 @@ module "key_pair" {
 data "template_file" "user_data" {
   template = file("${path.module}/user-data.sh.tpl")
   vars = {
-    REPLACE     = var.apigw_url
+    REPLACE = var.apigw_url
   }
 }
 
@@ -85,12 +85,12 @@ resource "aws_launch_configuration" "launch-conf" {
   # We're only setting the name_prefix here,
   # Terraform will add a random string at the end to keep it unique.
   # Terraform will add a random string at the end to keep it unique.
-  name_prefix     = "${var.prefix_name}-worker"
+  name_prefix = "${var.prefix_name}-worker"
   #ubuntu ami
   image_id        = "ami-063d4ab14480ac177" #var.ami
   instance_type   = var.vm_instance_type
   security_groups = [aws_security_group.counter-app-frontend-servers-sg.id]
-  key_name = module.key_pair.key_pair_key_name
+  key_name        = module.key_pair.key_pair_key_name
 
   user_data = data.template_file.user_data.rendered
 
