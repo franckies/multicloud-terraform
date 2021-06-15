@@ -1,6 +1,4 @@
 #!/bin/sh
-REPLACE='${REPLACE}'
-
 cd /home/azureuser 
 
 sudo apt-get update -y 

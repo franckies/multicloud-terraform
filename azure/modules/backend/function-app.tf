@@ -62,6 +62,9 @@ resource "azurerm_app_service_plan" "app_service_plan" {
 
 # Create the function app
 resource "azurerm_function_app" "function_app" {
+  depends_on = [
+    azurerm_storage_account.storage_account
+  ]
   name                       = "${var.prefix_name}-function-app"
   resource_group_name        = var.resource_group.name
   location                   = var.resource_group.region
@@ -69,22 +72,21 @@ resource "azurerm_function_app" "function_app" {
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE"    = "https://${azurerm_storage_account.storage_account.name}.blob.core.windows.net/${azurerm_storage_container.storage_container.name}/${azurerm_storage_blob.storage_blob.name}${data.azurerm_storage_account_blob_container_sas.storage_account_blob_container_sas.sas}",
     "FUNCTIONS_WORKER_RUNTIME" = "node",
-    "AzureWebJobsDisableHomepage" = "true",
-    "WEBSITE_NODE_DEFAULT_VERSION": null
+    # "AzureWebJobsDisableHomepage" = "true",
+    # "WEBSITE_NODE_DEFAULT_VERSION": null
   }
   os_type = "linux"
   
   site_config {
     linux_fx_version          = null
     use_32_bit_worker_process = false
-    cors = {
-      "allowed_origin" = "*"
+    cors {
+      allowed_origins = [ "*" ]
     }
   }
   storage_account_name       = azurerm_storage_account.storage_account.name
   storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
   version                    = "~3"
 }
-
 
 
