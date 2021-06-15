@@ -81,3 +81,7 @@ variable "intra_subnet" {
 variable "private_subnet" {
   description = "The private subnet id."
 }
+
+variable "api_url" {
+  description = "The url of the api exposing the backend service."
+}

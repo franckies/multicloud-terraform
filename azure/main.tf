@@ -32,6 +32,7 @@ module "frontend" {
   private_subnet = module.networking.private_subnet
   public_subnet  = module.networking.public_subnet
   intra_subnet   = module.networking.intra_subnet
+  api_url        = module.backend.function_app_default_hostname
   #prefix_name   =
   #resource_group= 
   #http_port     =
@@ -43,4 +44,12 @@ module "frontend" {
   #vm_password   = 
   #os_config     = 
 
+}
+
+module "backend" {
+  source = "./modules/backend"
+}
+
+output "function_app_default_hostname" {
+  value = module.backend.function_app_default_hostname
 }

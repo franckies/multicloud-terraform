@@ -86,13 +86,20 @@ resource "aws_security_group" "counter-app-lambda-sg" {
 ################################################################################
 # Backend lambda function
 ################################################################################
+# Generate ZIP from js file
+data "archive_file" "file_function_app" {
+  type        = "zip"
+  source_dir  = "${path.module}/backend-app"
+  output_path = "backend-app.zip"
+}
+
 # backend-app.handler is the name of the property under which the handler function
 # was exported in backend-app.js
 resource "aws_lambda_function" "counterUpdate" {
 
   function_name    = "counterUpdate"
-  filename         = "backend-app.zip"
-  source_code_hash = filebase64sha256("backend-app.zip")
+  filename         = data.archive_file.file_function_app.output_path
+  source_code_hash = filebase64sha256(data.archive_file.file_function_app.output_path)
   role             = aws_iam_role.counter-app-lambda-role.arn
   handler          = "backend-app.handler"
   runtime          = "nodejs12.x"

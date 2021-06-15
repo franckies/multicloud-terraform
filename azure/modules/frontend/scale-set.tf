@@ -105,12 +105,23 @@ resource "azurerm_virtual_machine_scale_set_extension" "frontend" {
   publisher                    = "Microsoft.Azure.Extensions"
   type                         = "CustomScript"
   type_handler_version         = "2.0"
-  settings = jsonencode({
-    "script" = base64encode(data.local_file.sh.content)
-  })
+  # settings = jsonencode({
+  #   "script" = base64encode(data.local_file.sh.content)
+  # })
+   settings = <<SETTINGS
+    {
+        "script": "${base64encode(templatefile("${path.module}/user-data.sh", {
+          REPLACE="${var.api_url}"
+        }))}"
+    }
+SETTINGS
 }
 
-data "local_file" "sh" {
-  filename = "${path.module}/user-data.sh"
-}
+
+# data "local_file" "sh" {
+#   filename = "${path.module}/user-data.sh"
+#   vars = {
+#     REPLACE = var.api_url
+#   }
+# }
 
