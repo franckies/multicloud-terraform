@@ -1,0 +1,29 @@
+{
+    "bindings": [
+        {
+            "authLevel": "anonymous",
+            "type": "httpTrigger",
+            "direction": "in",
+            "name": "req",
+            "methods": [
+                "get",
+                "post"
+            ],
+            "route": "/{*page}"
+        },
+        {
+            "type": "http",
+            "direction": "out",
+            "name": "res"
+        },
+        {
+            "type": "cosmosDB",
+            "direction": "out",
+            "name": "outputDocument",
+            "databaseName": "counter-app-db",
+            "collectionName": "counter-container",
+            "createIfNotExists": "false",
+            "connectionStringSetting": "CosmosDbConnectionString"
+        }
+    ]
+}

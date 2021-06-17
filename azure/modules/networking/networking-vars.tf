@@ -26,3 +26,8 @@ variable "public_subnets" {
   default     = ["192.168.0.0/24"]
   description = "Public subnet CIDR where the bastion and application load balancer will be deployed."
 }
+variable "prefix_name" {
+  type        = string
+  default     = "counter-app"
+  description = "Prefix name for application layer."
+}

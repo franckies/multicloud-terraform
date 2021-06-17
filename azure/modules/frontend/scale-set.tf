@@ -41,22 +41,34 @@ resource "azurerm_subnet_network_security_group_association" "frontend" {
 }
 
 ################################################################################
+# Bootstrap script
+################################################################################
+# resource "azurerm_virtual_machine_scale_set_extension" "frontend" {
+#   name                         = "${var.prefix_name}-frontend-ss-ext"
+#   virtual_machine_scale_set_id = azurerm_linux_virtual_machine_scale_set.frontend.id
+#   publisher                    = "Microsoft.Azure.Extensions"
+#   type                         = "CustomScript"
+#   type_handler_version         = "2.0"
+#    settings = <<SETTINGS
+#     { "script": "${base64encode(templatefile("${path.module}/user-data.sh", { apiname="${var.api_url}" }))}" } 
+#     SETTINGS
+# }
+
+################################################################################
 # Scale set
 ################################################################################
 resource "azurerm_linux_virtual_machine_scale_set" "frontend" {
-  depends_on = [
-    azurerm_lb_probe.frontend
-  ]
   name                = "${var.prefix_name}-frontend-ss"
   location            = var.resource_group.region
   resource_group_name = var.resource_group.name
+
+  custom_data = base64encode(templatefile("${path.module}/user-data.sh", { apiname="${var.api_url}" }))
 
   computer_name_prefix = var.prefix_name
   #upgrade_mode         = "Automatic"
   #health_probe_id      = azurerm_lb_probe.frontend.id
   zones = ["1", "2"]
 
-  custom_data    = filebase64("${path.module}/user-data.sh")
   sku            = "Standard_F2"
   instances      = 1
   admin_username = "azureuser"
@@ -95,33 +107,3 @@ resource "azurerm_linux_virtual_machine_scale_set" "frontend" {
     Environment = "dev"
   }
 }
-
-################################################################################
-# Bootstrap script
-################################################################################
-resource "azurerm_virtual_machine_scale_set_extension" "frontend" {
-  name                         = "${var.prefix_name}-frontend-ss-ext"
-  virtual_machine_scale_set_id = azurerm_linux_virtual_machine_scale_set.frontend.id
-  publisher                    = "Microsoft.Azure.Extensions"
-  type                         = "CustomScript"
-  type_handler_version         = "2.0"
-  # settings = jsonencode({
-  #   "script" = base64encode(data.local_file.sh.content)
-  # })
-   settings = <<SETTINGS
-    {
-        "script": "${base64encode(templatefile("${path.module}/user-data.sh", {
-          REPLACE="${var.api_url}"
-        }))}"
-    }
-SETTINGS
-}
-
-
-# data "local_file" "sh" {
-#   filename = "${path.module}/user-data.sh"
-#   vars = {
-#     REPLACE = var.api_url
-#   }
-# }
-

@@ -30,8 +30,8 @@
             type: 'GET',
             url: api_url,
             crossDomain: true,
-            contentType: "application/json",
-            dataType: 'json',
+            //contentType: "application/json",
+            //dataType: 'json',
             success: function (data) {
                 console.log(JSON.stringify(data.message));
                 var textstring = JSON.stringify(data.message.Item.counter.N);
@@ -53,9 +53,9 @@
                 type: 'POST',
                 url: api_url,
                 crossDomain: true,
-                contentType: "application/json",
+                //contentType: "application/json",
                 data: databody,
-                dataType: 'json',
+                //dataType: 'json',
                 success: function (data) {
                     console.log(JSON.stringify(data.message))
                     document.getElementById("button-text").innerHTML = "1";
@@ -74,9 +74,9 @@
                 type: 'POST',
                 url: api_url,
                 crossDomain: true,
-                contentType: "application/json",
+                //contentType: "application/json",
                 data: databody,
-                dataType: 'json',
+                //dataType: 'json',
                 success: function (data) {
                     console.log(JSON.stringify(data.message))
                     var textstring = JSON.stringify(data.message);

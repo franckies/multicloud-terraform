@@ -51,7 +51,7 @@ resource "azurerm_network_interface" "bastion" {
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "example" {
+resource "azurerm_network_interface_security_group_association" "bastion" {
   network_interface_id      = azurerm_network_interface.bastion.id
   network_security_group_id = azurerm_network_security_group.bastion.id
 }
@@ -61,6 +61,10 @@ resource "azurerm_network_interface_security_group_association" "example" {
 # Bastion VM
 ################################################################################
 resource "azurerm_virtual_machine" "bastion" {
+  # Solves the problem of misconfigured dependencies (https://github.com/terraform-providers/terraform-provider-azurerm/issues/6669)
+  depends_on = [
+    azurerm_network_interface_security_group_association.bastion
+  ]
   name                          = "${var.prefix_name}-bastion"
   location                      = var.resource_group.region
   resource_group_name           = var.resource_group.name

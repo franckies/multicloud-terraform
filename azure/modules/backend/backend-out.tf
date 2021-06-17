@@ -1,3 +1,3 @@
-output "function_app_default_hostname" {
-  value = azurerm_function_app.function_app.default_hostname
+output "api_url" {
+  value = "${azurerm_api_management.api_management.gateway_url}/counter"
 }
