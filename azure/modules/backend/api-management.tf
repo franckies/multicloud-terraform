@@ -18,7 +18,7 @@ resource "azurerm_api_management_api" "counter" {
   display_name          = "Counter"
   path                  = ""
   protocols             = ["https"]
-  service_url           = "https://${azurerm_function_app.function_app.default_hostname}/api"
+  service_url           = "https://${azurerm_function_app.function_app.default_hostname}/api/counter-app"
   subscription_required = false
 }
 

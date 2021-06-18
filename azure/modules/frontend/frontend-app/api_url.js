@@ -1,1 +1,1 @@
-var api_url = "aa";
+var api_url = "https://test-counter-function.azurewebsites.net/api/HttpTrigger1";

@@ -80,6 +80,6 @@ output "api_url" {
   value = module.backend.api_url
 }
 
-# output "lb_url" {
-#   value = module.networking.public_ip_dns
-# }
+output "lb_url" {
+  value = module.networking.public_ip_dns
+}
