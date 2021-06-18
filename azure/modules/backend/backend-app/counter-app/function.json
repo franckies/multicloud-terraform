@@ -8,7 +8,8 @@
         "methods": [
           "get",
           "post"
-        ]
+        ],
+        "route": "/{*page}"
       },
       {
         "type": "http",
@@ -20,7 +21,7 @@
         "direction": "out",
         "name": "outputDocument",
         "databaseName": "counter-app-db",
-        "collectionName": "counter-container",
+        "collectionName": "coll",
         "createIfNotExists": false,
         "connectionStringSetting": "CosmosDbConnectionString"
       },
@@ -29,9 +30,9 @@
         "direction": "in",
         "name": "inputDocument",
         "databaseName": "counter-app-db",
-        "collectionName": "counter-container",
+        "collectionName": "coll",
         "connectionStringSetting": "CosmosDbConnectionString",
-        "sqlQuery": "SELECT * from counter-container where counter-container.id = '1'"
+        "sqlQuery": "SELECT * from coll where coll.id = '1'"
       }
     ]
   }

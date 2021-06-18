@@ -16,6 +16,11 @@ resource "azurerm_storage_account" "storage_account" {
   location                 = var.resource_group.region
   account_tier             = "Standard"
   account_replication_type = "LRS"
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
 }
 
 resource "azurerm_storage_container" "storage_container" {
@@ -62,6 +67,11 @@ resource "azurerm_app_service_plan" "app_service_plan" {
     tier = "Premium V2"
     size = "P1v2"
   }
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
 }
 
 # Create the function app
@@ -105,6 +115,11 @@ resource "azurerm_function_app" "function_app" {
       client_id = azuread_application.ad_application_function_app.application_id
     }
     unauthenticated_client_action = "RedirectToLoginPage"
+  }
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
   }
 }
 

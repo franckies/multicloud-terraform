@@ -1,5 +1,5 @@
 resource "azurerm_api_management" "api_management" {
-  name                = "${var.prefix_name}-api-management04"
+  name                = "${var.prefix_name}-api-management01"
   resource_group_name = var.resource_group.name
   location            = var.resource_group.region
   publisher_name      = "franckies"
@@ -18,7 +18,7 @@ resource "azurerm_api_management_api" "counter" {
   display_name          = "Counter"
   path                  = ""
   protocols             = ["https"]
-  service_url           = "https://${azurerm_function_app.function_app.default_hostname}/api/counter-app"
+  service_url           = "https://${azurerm_function_app.function_app.default_hostname}/api"
   subscription_required = false
 }
 

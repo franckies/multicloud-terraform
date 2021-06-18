@@ -7,6 +7,11 @@ resource "azurerm_lb" "frontend" {
     public_ip_address_id = var.public_ip_id
   }
   sku = "Standard"
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
 }
 
 resource "azurerm_lb_backend_address_pool" "frontend" {

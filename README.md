@@ -6,10 +6,26 @@ Configure your profile settings with _awscli_ inserting your _access key ID_ and
 ```
 aws configure
 ```
+Then just run the following commands to have your infrastructure up and configured.
+```
+cd ./aws
+terraform init
+terraform plan
+terraform apply
+```
+
 # Azure
 ## Get started
 Use the _azcli_ to login and then set your subscription:
 ```
 az login
 az account set --subscription="your_subscription_id"
+```
+Then just run the following commands to have your infrastructure up and configured.
+_Beware that the api management service can take up to 1h to be deployed!_
+```
+cd ./azure
+terraform init
+terraform plan
+terraform apply
 ```

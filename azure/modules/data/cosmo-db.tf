@@ -7,7 +7,6 @@ resource "azurerm_cosmosdb_account" "cosmos" {
   resource_group_name       = var.resource_group.name
   location                  = var.resource_group.region
   offer_type                = "Standard"
-  kind                      = "GlobalDocumentDB"
   enable_automatic_failover = true
   consistency_policy {
     consistency_level = "Session"
@@ -16,6 +15,11 @@ resource "azurerm_cosmosdb_account" "cosmos" {
   geo_location {
     location          = var.resource_group.region
     failover_priority = 0
+  }
+  
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
   }
 }
 
@@ -29,7 +33,7 @@ resource "azurerm_cosmosdb_sql_database" "sqldb" {
 
 #collection
 resource "azurerm_cosmosdb_sql_container" "sqlcoll" {
-  name                  = "counter-container"
+  name                  = "coll"
   resource_group_name   = var.resource_group.name
   account_name          = azurerm_cosmosdb_account.cosmos.name
   database_name         = azurerm_cosmosdb_sql_database.sqldb.name
