@@ -8,6 +8,11 @@ output "public_ip_dns" {
   value       = azurerm_public_ip.frontend.fqdn
 }
 
+output "public_ip_url" {
+  description = "The dns A record associated with the frontend public IP."
+  value       = "http://${azurerm_public_ip.frontend.fqdn}"
+}
+
 output "public_subnet" {
   description = "The public subnets ids."
   value       = azurerm_subnet.public.id

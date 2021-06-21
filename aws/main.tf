@@ -64,5 +64,8 @@ output "api_gateway_url" {
   value = module.backend.base_url
 }
 output "load_balancer_url" {
+  value = module.frontend.lb_url
+}
+output "load_balancer_dns" {
   value = module.frontend.lb_dns
 }

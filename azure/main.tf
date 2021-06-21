@@ -78,10 +78,10 @@ module "data" {
   # prefix_aname   =
 }
 
-output "api_url" {
+output "api_management_url" {
   value = module.backend.api_url
 }
 
-output "lb_url" {
-  value = "http://${module.networking.public_ip_dns}"
+output "load_balancer_dns" {
+  value = module.networking.public_ip_dns
 }
