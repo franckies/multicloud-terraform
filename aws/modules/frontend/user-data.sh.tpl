@@ -7,7 +7,7 @@ sudo yum install -y httpd
 sudo service httpd start
 cd /home/ec2-user
 
-# Install front end app
+# Install frontend app
 sudo yum install -y git 
 git clone https://github.com/franckies/multicloud-terraform.git
 sudo chmod go+rw /var/www/html

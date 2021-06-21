@@ -1,17 +1,3 @@
-# module "vnet" {
-#   source              = "Azure/vnet/azurerm"
-#   resource_group_name = var.resource_group.name
-#   vnet_location       = var.resource_group.region
-#   address_space       = [var.vnet_cidr]
-#   subnet_prefixes     = concat(var.public_subnets, var.private_subnets, var.intra_subnets, )
-#   subnet_names        = ["public_subnet", "private_subnet", "intra_subnet"]
-
-#   tags = {
-#     Terraform   = "true"
-#     Environment = "dev"
-#   }
-# }
-
 resource "azurerm_virtual_network" "networking" {
   name                = "${var.prefix_name}-vnet"
   address_space       = [var.vnet_cidr]
@@ -42,14 +28,17 @@ resource "azurerm_subnet" "intra" {
   resource_group_name  = var.resource_group.name
   virtual_network_name = azurerm_virtual_network.networking.name
   address_prefixes     = var.intra_subnets
-  # delegation {
-  #   name = "functionapp-delegation"
+  # service delegation for function app integration
+  delegation {
+    name = "functionapp-delegation"
 
-  #   service_delegation {
-  #     name    = "Microsoft.Web/serverFarms"
-  #     actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
-  #   }
-  # }
+    service_delegation {
+      name    = "Microsoft.Web/serverFarms"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+    }
+  }
+  #service endpoint for cosmos
+  service_endpoints = ["Microsoft.AzureCosmosDB"]
 }
 
 resource "azurerm_public_ip" "frontend" {
@@ -58,7 +47,7 @@ resource "azurerm_public_ip" "frontend" {
   resource_group_name = var.resource_group.name
   allocation_method   = "Static"
   domain_name_label   = var.resource_group.name
-  sku = "Standard"
+  sku                 = "Standard"
   tags = {
     Terraform   = "true"
     Environment = "dev"

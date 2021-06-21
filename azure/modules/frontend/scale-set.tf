@@ -62,7 +62,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "frontend" {
   location            = var.resource_group.region
   resource_group_name = var.resource_group.name
 
-  custom_data = base64encode(templatefile("${path.module}/user-data.sh", { apiname="${var.api_url}" }))
+  custom_data = base64encode(templatefile("${path.module}/user-data.sh.tpl", { apiname = "${var.api_url}" }))
 
   computer_name_prefix = var.prefix_name
   #upgrade_mode         = "Automatic"

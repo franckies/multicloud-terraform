@@ -3,10 +3,15 @@
 ################################################################################
 #account
 resource "azurerm_cosmosdb_account" "cosmos" {
-  name                      = "${var.prefix_name}-cosmos"
-  resource_group_name       = var.resource_group.name
-  location                  = var.resource_group.region
-  offer_type                = "Standard"
+  name                = "${var.prefix_name}-cosmos"
+  resource_group_name = var.resource_group.name
+  location            = var.resource_group.region
+  offer_type          = "Standard"
+  # secure database to be accessible only from within vnet
+  is_virtual_network_filter_enabled = true
+  virtual_network_rule {
+    id = var.intra_subnet
+  }
   enable_automatic_failover = true
   consistency_policy {
     consistency_level = "Session"
@@ -16,7 +21,7 @@ resource "azurerm_cosmosdb_account" "cosmos" {
     location          = var.resource_group.region
     failover_priority = 0
   }
-  
+
   tags = {
     Terraform   = "true"
     Environment = "dev"

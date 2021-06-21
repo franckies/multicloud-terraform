@@ -38,12 +38,6 @@ variable "ssh_port" {
   description = "The ssh port."
 }
 
-variable "key_name" {
-  type        = string
-  default     = "ec2-hawordpress"
-  description = "The name of private key to access the VMs through SSH."
-}
-
 variable "ami" {
   type        = string
   default     = "ami-038d7b856fe7557b3"

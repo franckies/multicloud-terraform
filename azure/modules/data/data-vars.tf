@@ -12,3 +12,8 @@ variable "resource_group" {
   }
   description = "Resource group name and region."
 }
+
+variable "intra_subnet" {
+  type        = string
+  description = "The intra subnet id."
+}

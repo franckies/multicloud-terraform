@@ -26,5 +26,10 @@ variable "https_port" {
 }
 
 variable "connection_string" {
-    description = "The cosmos first connection string."
+  description = "The cosmos first connection string."
+}
+
+variable "intra_subnet" {
+  type        = string
+  description = "The intra subnet id."
 }

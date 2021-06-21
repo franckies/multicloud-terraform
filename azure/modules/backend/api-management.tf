@@ -4,7 +4,7 @@ resource "azurerm_api_management" "api_management" {
   location            = var.resource_group.region
   publisher_name      = "franckies"
   publisher_email     = "franckies@hello.io"
-  sku_name            = "Developer_1" 
+  sku_name            = "Developer_1"
   identity {
     type = "SystemAssigned"
   }

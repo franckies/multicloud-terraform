@@ -61,7 +61,7 @@ resource "azurerm_app_service_plan" "app_service_plan" {
   name                = "${var.prefix_name}-app-service-plan"
   resource_group_name = var.resource_group.name
   location            = var.resource_group.region
-  kind                = "FunctionApp"
+  kind                = "linux"
   reserved            = true
   sku {
     tier = "Premium V2"
@@ -96,10 +96,7 @@ resource "azurerm_function_app" "function_app" {
     cors {
       allowed_origins = ["*"]
     }
-    # IP Restrictions are valid with consume tier, while function vnet integration is only available with elastic tier
-    # ip_restriction {
-    #   virtual_network_subnet_id = var.private_subnet
-    # }
+
   }
   storage_account_name       = azurerm_storage_account.storage_account.name
   storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
@@ -123,10 +120,11 @@ resource "azurerm_function_app" "function_app" {
   }
 }
 
-# resource "azurerm_app_service_virtual_network_swift_connection" "vnet_integration" {
-#   app_service_id = azurerm_function_app.function_app.id
-#   subnet_id      = var.intra_subnet
-# }
+# Integrate function app into vnet
+resource "azurerm_app_service_virtual_network_swift_connection" "vnet_integration" {
+  app_service_id = azurerm_function_app.function_app.id
+  subnet_id      = var.intra_subnet
+}
 
 resource "azuread_application" "ad_application_function_app" {
   display_name            = "${var.prefix_name}-ad-application-function-app"

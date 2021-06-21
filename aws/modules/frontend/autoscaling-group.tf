@@ -97,12 +97,6 @@ resource "aws_launch_configuration" "launch-conf" {
   lifecycle {
     create_before_destroy = true
   }
-
-  # tags = {
-  #   Name        = "${var.prefix_name}-servers"
-  #   Terraform   = "true"
-  #   Environment = "dev"
-  # }
 }
 
 ################################################################################
