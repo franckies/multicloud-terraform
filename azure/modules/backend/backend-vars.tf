@@ -33,3 +33,8 @@ variable "intra_subnet" {
   type        = string
   description = "The intra subnet id."
 }
+
+variable "aws_api_url" {
+  type = string
+  description = "The aws api gateway url for db synchronization."
+}

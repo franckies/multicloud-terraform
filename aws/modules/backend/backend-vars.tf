@@ -41,3 +41,8 @@ variable "https_port" {
   default     = 443
   description = "The http port."
 }
+
+variable "azure_api_url" {
+  type = string
+  description = "The azure api management url for db synchronization."
+}

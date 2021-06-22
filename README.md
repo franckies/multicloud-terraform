@@ -29,3 +29,13 @@ terraform init
 terraform plan
 terraform apply
 ```
+# Multicloud
+## Get started
+The multicloud infrastructure can be launched directly from the root directory, after having configured both the aws and the azure providers as explained in their relative pharagraphs.
+```
+terraform init
+terraform plan
+terraform apply
+```
+By manipulating the ```multicloud``` variable  it's possible to decide whether or not to deploy the multicloud infrastructure. If ```multicloud``` is ```true```, then the whole infra will be dpeloyed together with the Azure Traffic Manager. If ```multicloud``` is ```false```, the two infrastructures will be deployed independently.
+You can modify the ```terraform.tfvars``` file in order to customize your deployment.

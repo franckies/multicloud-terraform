@@ -11,17 +11,17 @@ variable "vnet_cidr" {
   default     = "192.168.0.0/16"
   description = "The CIDR of the VPC."
 }
-variable "private_subnets" {
+variable "private_subnet" {
   type        = list(string)
   default     = ["192.168.2.0/24"]
   description = "Private subnet CIDR where the front end layer will be deployed."
 }
-variable "intra_subnets" {
+variable "intra_subnet" {
   type        = list(string)
   default     = ["192.168.1.0/24"]
   description = "Intra subnet CIDR where the lambda function will be deployed."
 }
-variable "public_subnets" {
+variable "public_subnet" {
   type        = list(string)
   default     = ["192.168.0.0/24"]
   description = "Public subnet CIDR where the bastion and application load balancer will be deployed."

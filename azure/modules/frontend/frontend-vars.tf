@@ -66,6 +66,12 @@ variable "os_config" {
   description = "Configuration of OS for bastion and vms."
 }
 
+variable "ssh_private_key_path" {
+  type = string
+  default = "~/.ssh/id_rsa.pub"
+  description = "Path to your private key."
+}
+
 variable "public_ip_id" {
   description = "ID of public IP resource."
 }

@@ -1,8 +1,11 @@
 var AWS = require('aws-sdk');
+const https = require('https');
 var ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 
 exports.handler = async (event) => {
 	try {
+		var multicloud = process.env["azure_api"] == "" ? false : true;
+
 		// Handle GET request
 		if (!event.body) {
 			var params = {
@@ -73,6 +76,12 @@ exports.handler = async (event) => {
 			}
 
 
+			// If multicloud is enable then sync aws azure cosmos db
+			if (multicloud && obj.sender != 'azure') {
+				await doPostRequest(counter_num-1) 
+				.then(result => console.log(`Status code: ${result}`))
+				.catch(err => console.error(`Error doing the request for the event: ${JSON.stringify(event)} => ${err}`));
+			}
 			var response = {
 				'statusCode': 200,
 				headers: {
@@ -90,6 +99,44 @@ exports.handler = async (event) => {
 		console.log(err);
 		return err;
 	}
-
 	return response;
 };
+
+
+const doPostRequest = (counter) => {
+
+	const data = JSON.stringify({
+		counter: counter,
+		sender: 'aws'
+	})
+	var azure_host = process.env["azure_api"].split("/");
+
+	return new Promise((resolve, reject) => {
+		const options = {
+			hostname: azure_host[2],
+			port: 443,
+			path: '/' + azure_host[3],
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Content-Length': data.length
+			}
+	  };
+	  
+	  //create the request object with the callback with the result
+	  const req = https.request(options, (res) => {
+		resolve(JSON.stringify(res.statusCode));
+	  });
+  
+	  // handle the possible errors
+	  req.on('error', (e) => {
+		reject(e.message);
+	  });
+	  
+	  //do the request
+	  req.write(data);
+  
+	  //finish the request
+	  req.end();
+	});
+  };

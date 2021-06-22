@@ -41,20 +41,6 @@ resource "azurerm_subnet_network_security_group_association" "frontend" {
 }
 
 ################################################################################
-# Bootstrap script
-################################################################################
-# resource "azurerm_virtual_machine_scale_set_extension" "frontend" {
-#   name                         = "${var.prefix_name}-frontend-ss-ext"
-#   virtual_machine_scale_set_id = azurerm_linux_virtual_machine_scale_set.frontend.id
-#   publisher                    = "Microsoft.Azure.Extensions"
-#   type                         = "CustomScript"
-#   type_handler_version         = "2.0"
-#    settings = <<SETTINGS
-#     { "script": "${base64encode(templatefile("${path.module}/user-data.sh", { apiname="${var.api_url}" }))}" } 
-#     SETTINGS
-# }
-
-################################################################################
 # Scale set
 ################################################################################
 resource "azurerm_linux_virtual_machine_scale_set" "frontend" {
@@ -65,8 +51,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "frontend" {
   custom_data = base64encode(templatefile("${path.module}/user-data.sh.tpl", { apiname = "${var.api_url}" }))
 
   computer_name_prefix = var.prefix_name
-  #upgrade_mode         = "Automatic"
-  #health_probe_id      = azurerm_lb_probe.frontend.id
+
   zones = ["1", "2"]
 
   sku            = "Standard_F2"
@@ -75,7 +60,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "frontend" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = file("${var.ssh_private_key_path}")
   }
 
   source_image_reference {

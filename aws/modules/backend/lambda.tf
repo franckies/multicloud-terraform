@@ -90,7 +90,7 @@ resource "aws_security_group" "counter-app-lambda-sg" {
 data "archive_file" "file_function_app" {
   type        = "zip"
   source_dir  = "${path.module}/backend-app"
-  output_path = "backend-app.zip"
+  output_path = "${path.module}/backend-app.zip"
 }
 
 # backend-app.handler is the name of the property under which the handler function
@@ -107,6 +107,12 @@ resource "aws_lambda_function" "counterUpdate" {
   vpc_config {
     subnet_ids         = var.intra_subnets
     security_group_ids = [aws_security_group.counter-app-lambda-sg.id]
+  }
+
+  environment {
+    variables = {
+      azure_api = "${var.azure_api_url}"
+    }
   }
 
 }

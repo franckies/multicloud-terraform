@@ -46,7 +46,7 @@
     });
     $("#button-text").click(function () {
         var textstring = document.getElementById("button-text").innerHTML;
-        var databody = '{"counter":"1"}';
+        var databody = '{"counter":"1", "sender":"js"}';
         // Init counter if it is empty
         if (textstring == "") {
             $.ajax({
@@ -68,7 +68,7 @@
         else {
             var textnum = parseInt(textstring);
             textstring = textnum.toString()
-            var databody = '{"counter":"' + textstring + '"}';
+            var databody = '{"counter":"' + textstring + '", "sender":"js"}';
             console.log(databody)
             $.ajax({
                 type: 'POST',

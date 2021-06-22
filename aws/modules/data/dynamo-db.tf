@@ -4,7 +4,7 @@
 module "dynamodb_table" {
   source = "terraform-aws-modules/dynamodb-table/aws"
 
-  name     = "counter-app-table"
+  name     = "${var.prefix_name}-table"
   hash_key = "id"
 
   read_capacity  = 5

@@ -6,7 +6,7 @@ data "archive_file" "file_function_app" {
   # Ensure local file is created before zipping
   type        = "zip"
   source_dir  = "${path.module}/backend-app"
-  output_path = "backend-app.zip"
+  output_path = "${path.module}/backend-app.zip"
 }
 
 # Create storage account holding the function code
@@ -87,10 +87,12 @@ resource "azurerm_function_app" "function_app" {
     "WEBSITE_RUN_FROM_PACKAGE" = "https://${azurerm_storage_account.storage_account.name}.blob.core.windows.net/${azurerm_storage_container.storage_container.name}/${azurerm_storage_blob.storage_blob.name}${data.azurerm_storage_account_blob_container_sas.storage_account_blob_container_sas.sas}",
     "FUNCTIONS_WORKER_RUNTIME" = "node",
     "CosmosDbConnectionString" = "${var.connection_string}"
+    "aws_api"                  = "${var.aws_api_url}"
   }
   os_type = "linux"
 
   site_config {
+    always_on                 = true
     linux_fx_version          = null
     use_32_bit_worker_process = false
     cors {
@@ -128,7 +130,7 @@ resource "azurerm_app_service_virtual_network_swift_connection" "vnet_integratio
 
 resource "azuread_application" "ad_application_function_app" {
   display_name            = "${var.prefix_name}-ad-application-function-app"
-  type                    = "webapp/api"
+  #type                    = "webapp/api"
   prevent_duplicate_names = true
 }
 

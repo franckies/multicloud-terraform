@@ -4,7 +4,7 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = var.vpc_name
+  name = "${var.prefix_name}-vpc"
   cidr = var.vpc_cidr
   azs  = var.azs
   # subnets
@@ -26,6 +26,14 @@ module "vpc" {
     Terraform   = "true"
     Environment = "dev"
   }
+}
+
+# Route table for multicloud communication
+resource "aws_route" "r" {
+  route_table_id            = module.vpc.intra_route_table_ids[0]
+  destination_cidr_block    = "0.0.0.0/0"
+  nat_gateway_id            = module.vpc.natgw_ids[0]
+  depends_on                = [module.vpc]
 }
 
 ################################################################################

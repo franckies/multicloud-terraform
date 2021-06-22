@@ -16,16 +16,19 @@ provider "aws" {
 #============================= MODULES IMPORT ==================================
 module "networking" {
   source = "./modules/networking"
-  #vpc_name              = 
-  #vpc_cidr              =
-  #azs                   =
-  #private_subnets       =
-  #public_subnets        =
-  #intra_subnets         =
+
+  prefix_name     = var.prefix_name
+  vpc_cidr        = var.vpc_cidr
+  azs             = var.azs
+  private_subnets = var.private_subnets
+  public_subnets  = var.public_subnets
+  intra_subnets   = var.intra_subnets
 }
 
 module "data" {
   source = "./modules/data"
+
+  prefix_name = var.prefix_name
 }
 
 module "frontend" {
@@ -35,17 +38,18 @@ module "frontend" {
   private_subnets = module.networking.private_subnets
   public_subnets  = module.networking.public_subnets
   intra_subnets   = module.networking.intra_subnets
+  apigw_url       = module.backend.base_url
 
-  apigw_url = module.backend.base_url
-  #prefix_name          =
-  #http_port            = 
-  #https_port           =
-  #ssh_port             =
-  #ami                  =
-  #vm_instance_type     =
+  prefix_name      = var.prefix_name
+  http_port        = var.http_port
+  https_port       = var.https_port
+  ssh_port         = var.ssh_port
+  ami              = var.ami
+  vm_instance_type = var.vm_instance_type
+  asg_min_size     = var.asg_min_size
+  asg_max_size     = var.asg_max_size
 
-  #asg_min_size         = 
-  #asg_max_size         = 
+
 }
 
 module "backend" {
@@ -58,8 +62,20 @@ module "backend" {
 
   dynamo_table_arn = module.data.table_arn
 
+  ##############################################################################
+  # API url for azure api management to implement the multicloud infrastructure. 
+  # By default it is an empty string, resulting in the deploy of the aws
+  # infrastructure alone.
+  ##############################################################################
+  azure_api_url = var.azure_api_url
+
+  prefix_name = var.prefix_name
+  stage_name  = var.stage_name
+  http_port   = var.http_port
+  https_port  = var.https_port
 }
 
+#================================= OUTPUT ======================================
 output "api_gateway_url" {
   value = module.backend.base_url
 }

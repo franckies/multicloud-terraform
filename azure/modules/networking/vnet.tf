@@ -13,21 +13,21 @@ resource "azurerm_subnet" "public" {
   name                 = "public-subnet"
   resource_group_name  = var.resource_group.name
   virtual_network_name = azurerm_virtual_network.networking.name
-  address_prefixes     = var.public_subnets
+  address_prefixes     = var.public_subnet
 }
 
 resource "azurerm_subnet" "private" {
   name                 = "private-subnet"
   resource_group_name  = var.resource_group.name
   virtual_network_name = azurerm_virtual_network.networking.name
-  address_prefixes     = var.private_subnets
+  address_prefixes     = var.private_subnet
 }
 
 resource "azurerm_subnet" "intra" {
   name                 = "intra-subnet"
   resource_group_name  = var.resource_group.name
   virtual_network_name = azurerm_virtual_network.networking.name
-  address_prefixes     = var.intra_subnets
+  address_prefixes     = var.intra_subnet
   # service delegation for function app integration
   delegation {
     name = "functionapp-delegation"

@@ -1,5 +1,5 @@
 resource "azurerm_api_management" "api_management" {
-  name                = "${var.prefix_name}-api-management01"
+  name                = "${var.prefix_name}-api-management02"
   resource_group_name = var.resource_group.name
   location            = var.resource_group.region
   publisher_name      = "franckies"
@@ -59,10 +59,10 @@ resource "azurerm_api_management_api_policy" "api_management_api_policy_api_publ
         <allowed-methods>
             <method>GET</method>
             <method>POST</method>
+            <method>OPTIONS</method>
         </allowed-methods>
         <allowed-headers>
-            <header>content-type</header>
-            <header>accept</header>
+            <header>*</header>
         </allowed-headers>
     </cors>
   </inbound>
