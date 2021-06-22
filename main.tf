@@ -102,7 +102,7 @@ resource "azurerm_traffic_manager_endpoint" "counter-app-azure" {
   count = var.multicloud == true ? 1 : 0
   name                = "${var.prefix_name}-azure"
   resource_group_name = var.resource_group.name
-  profile_name        = azurerm_traffic_manager_profile.counter-app.name
+  profile_name        = azurerm_traffic_manager_profile.counter-app[count.index].name
   target              = module.azure_infra.load_balancer_dns
   type                = "externalEndpoints"
   weight            = 100
@@ -112,14 +112,14 @@ resource "azurerm_traffic_manager_endpoint" "counter-app-aws" {
   count = var.multicloud == true ? 1 : 0
   name                = "${var.prefix_name}-aws"
   resource_group_name = var.resource_group.name
-  profile_name        = azurerm_traffic_manager_profile.counter-app.name
+  profile_name        = azurerm_traffic_manager_profile.counter-app[count.index].name
   target              = module.aws_infra.load_balancer_dns
   type                = "externalEndpoints"
   weight            = 100
 }
 
 output "dns_name" {
-  value = var.multicloud == true ? "http://${azurerm_traffic_manager_profile.counter-app.fqdn}" : ""
+  value = var.multicloud == true ? "http://${azurerm_traffic_manager_profile.counter-app[0].fqdn}" : ""
 }
 output "aws_dns" {
   value = module.aws_infra.load_balancer_url
