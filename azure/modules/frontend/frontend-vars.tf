@@ -43,6 +43,12 @@ variable "bastion_vmsize" {
   description = "Size of bastion host."
 }
 
+variable "instances_num" {
+  type        = number
+  default     = "2"
+  description = "Number of instances in the scale set."
+}
+
 variable "vm_username" {
   type        = string
   default     = "azureuser"
@@ -67,8 +73,8 @@ variable "os_config" {
 }
 
 variable "ssh_private_key_path" {
-  type = string
-  default = "~/.ssh/id_rsa.pub"
+  type        = string
+  default     = "~/.ssh/id_rsa.pub"
   description = "Path to your private key."
 }
 

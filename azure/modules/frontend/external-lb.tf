@@ -15,20 +15,22 @@ resource "azurerm_lb" "frontend" {
 }
 
 resource "azurerm_lb_backend_address_pool" "frontend" {
-  #resource_group_name = var.resource_group.name
   loadbalancer_id = azurerm_lb.frontend.id
   name            = "${var.prefix_name}-BackEndAddressPool"
 }
 
-resource "azurerm_lb_nat_pool" "frontend" {
+resource "azurerm_lb_rule" "frontend" {
   resource_group_name            = var.resource_group.name
-  name                           = "http"
   loadbalancer_id                = azurerm_lb.frontend.id
+  name                           = "${var.prefix_name}-LBRule"
   protocol                       = "Tcp"
-  frontend_port_start            = 80
-  frontend_port_end              = 89
-  backend_port                   = var.http_port
+  frontend_port                  = 80
+  backend_port                   = 80
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.frontend.id
   frontend_ip_configuration_name = "${var.prefix_name}-PublicIPAddress"
+  probe_id                       = azurerm_lb_probe.frontend.id
+  # Allow outbound connectivity with snat (not suggested for production env., instead, deploy a NAT gateway)
+  disable_outbound_snat          = false
 }
 
 resource "azurerm_lb_probe" "frontend" {
@@ -36,19 +38,6 @@ resource "azurerm_lb_probe" "frontend" {
   loadbalancer_id     = azurerm_lb.frontend.id
   name                = "http-probe"
   protocol            = "Http"
-  request_path        = "/health"
+  request_path        = "/"
   port                = var.http_port
-}
-
-# Allowing VMs within scale set to go to internet
-resource "azurerm_lb_outbound_rule" "frontend" {
-  resource_group_name     = var.resource_group.name
-  loadbalancer_id         = azurerm_lb.frontend.id
-  name                    = "OutboundRule"
-  protocol                = "Tcp"
-  backend_address_pool_id = azurerm_lb_backend_address_pool.frontend.id
-
-  frontend_ip_configuration {
-    name = "${var.prefix_name}-PublicIPAddress"
-  }
 }

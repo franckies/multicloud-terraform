@@ -3,7 +3,6 @@ prefix_name = "counter-app"
 http_port   = 80
 https_port  = 443
 ssh_port    = 22
-
 #============================= AZURE VARS ======================================
 resource_group = {
   "name" = "cloud-semeraro-tesina"
@@ -23,6 +22,7 @@ os_config = {
   sku       = "16.04-LTS"
   version   = "latest"
 }
+instances_num = 2
 ssh_private_key_path = "~/.ssh/id_rsa.pub"
 
 #============================= AWS VARS ========================================

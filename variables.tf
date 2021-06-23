@@ -95,6 +95,12 @@ variable "os_config" {
   description = "Configuration of OS for bastion and vms."
 }
 
+variable "instances_num" {
+  type        = number
+  default     = "2"
+  description = "Number of instances in the scale set."
+}
+
 variable "ssh_private_key_path" {
   type        = string
   default     = "~/.ssh/id_rsa.pub"

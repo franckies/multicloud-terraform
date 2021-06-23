@@ -54,8 +54,17 @@ resource "azurerm_linux_virtual_machine_scale_set" "frontend" {
 
   zones = ["1", "2"]
 
+  health_probe_id = azurerm_lb_probe.frontend.id
+  upgrade_mode    = "Rolling"
+  rolling_upgrade_policy {
+    max_batch_instance_percent              = 20
+    max_unhealthy_instance_percent          = 20
+    max_unhealthy_upgraded_instance_percent = 5
+    pause_time_between_batches              = "PT0S"
+  }
+
   sku            = "Standard_F2"
-  instances      = 1
+  instances      = var.instances_num
   admin_username = "azureuser"
 
   admin_ssh_key {
@@ -84,11 +93,12 @@ resource "azurerm_linux_virtual_machine_scale_set" "frontend" {
       primary                                = true
       subnet_id                              = var.private_subnet
       load_balancer_backend_address_pool_ids = [azurerm_lb_backend_address_pool.frontend.id]
-      load_balancer_inbound_nat_rules_ids    = [azurerm_lb_nat_pool.frontend.id]
     }
   }
   tags = {
     Terraform   = "true"
     Environment = "dev"
   }
+  # Solves misdependency configuration https://github.com/terraform-providers/terraform-provider-azurerm/issues/4398
+  depends_on = [azurerm_lb_rule.frontend]
 }

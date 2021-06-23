@@ -45,7 +45,7 @@ module "frontend" {
   private_subnet = module.networking.private_subnet
   public_subnet  = module.networking.public_subnet
   intra_subnet   = module.networking.intra_subnet
-  api_url        = module.backend.api_url
+  api_url        = "" #module.backend.api_url
 
   resource_group       = var.resource_group
   prefix_name          = var.prefix_name
@@ -54,6 +54,7 @@ module "frontend" {
   ssh_port             = var.ssh_port
   bastion_user         = var.bastion_user
   bastion_vmsize       = var.bastion_vmsize
+  instances_num        = var.instances_num
   vm_username          = var.vm_username
   vm_password          = var.vm_password
   os_config            = var.os_config

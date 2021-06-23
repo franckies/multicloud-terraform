@@ -42,6 +42,7 @@ module "azure_infra" {
   vm_password          = var.vm_password
   os_config            = var.os_config
   ssh_private_key_path = var.ssh_private_key_path
+  instances_num        = var.instances_num
 }
 
 module "aws_infra" {

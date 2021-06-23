@@ -84,6 +84,12 @@ variable "vm_password" {
   description = "Password for vms."
 }
 
+variable "instances_num" {
+  type        = number
+  default     = "2"
+  description = "Number of instances in the scale set."
+}
+
 variable "os_config" {
   type = map(any)
   default = {

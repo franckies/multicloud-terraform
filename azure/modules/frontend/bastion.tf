@@ -7,6 +7,7 @@ resource "azurerm_public_ip" "bastion" {
   resource_group_name = var.resource_group.name
   domain_name_label   = "${var.prefix_name}-ssh"
   allocation_method   = "Static"
+  sku                 = "Standard"
 }
 
 ################################################################################
