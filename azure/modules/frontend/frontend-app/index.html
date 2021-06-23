@@ -70,7 +70,6 @@
             var textnum = parseInt(textstring);
             textstring = textnum.toString()
             var databody = '{"counter":"' + textstring + '", "sender":"js"}';
-            console.log(databody)
             $.ajax({
                 type: 'POST',
                 url: api_url,

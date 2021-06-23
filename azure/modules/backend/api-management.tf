@@ -1,5 +1,5 @@
 resource "azurerm_api_management" "api_management" {
-  name                = "${var.prefix_name}-api-management02"
+  name                = "${var.prefix_name}-api-management03"
   resource_group_name = var.resource_group.name
   location            = var.resource_group.region
   publisher_name      = "franckies"

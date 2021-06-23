@@ -45,7 +45,7 @@ module "frontend" {
   private_subnet = module.networking.private_subnet
   public_subnet  = module.networking.public_subnet
   intra_subnet   = module.networking.intra_subnet
-  api_url        = "" #module.backend.api_url
+  api_url        = module.backend.api_url
 
   resource_group       = var.resource_group
   prefix_name          = var.prefix_name
