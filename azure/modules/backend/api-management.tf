@@ -1,5 +1,8 @@
+################################################################################
+# API Management service
+################################################################################
 resource "azurerm_api_management" "api_management" {
-  name                = "${var.prefix_name}-api-management03"
+  name                = "${var.prefix_name}-api-management"
   resource_group_name = var.resource_group.name
   location            = var.resource_group.region
   publisher_name      = "franckies"
@@ -7,6 +10,11 @@ resource "azurerm_api_management" "api_management" {
   sku_name            = "Developer_1"
   identity {
     type = "SystemAssigned"
+  }
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
   }
 }
 

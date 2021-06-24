@@ -1,6 +1,6 @@
 variable "multicloud" {
-  type = bool
-  default = true
+  type        = bool
+  default     = true
   description = "Whether or not to enable the multicloud infrastructure."
 }
 variable "prefix_name" {

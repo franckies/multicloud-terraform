@@ -1,3 +1,6 @@
+################################################################################
+# Virtual network, subnets, external public IP
+################################################################################
 resource "azurerm_virtual_network" "networking" {
   name                = "${var.prefix_name}-vnet"
   address_space       = [var.vnet_cidr]

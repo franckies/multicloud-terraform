@@ -47,49 +47,27 @@
     });
     $("#button-text").click(function () {
         var textstring = document.getElementById("button-text").innerHTML;
-        var databody = '{"counter":"1", "sender":"js"}';
-        // Init counter if it is empty
-        if (textstring == "") {
-            $.ajax({
-                type: 'POST',
-                url: api_url,
-                crossDomain: true,
-                //contentType: "application/json",
-                data: databody,
-                //dataType: 'json',
-                success: function (data) {
-                    console.log(JSON.stringify(data));
-                    document.getElementById("button-text").innerHTML = "1";
-                },
-                error: function (responseData, textStatus, errorThrown) {
-                    console.log('POST failed.');
-                }
-            });
-        }
-        else {
-            var textnum = parseInt(textstring);
-            textstring = textnum.toString()
-            var databody = '{"counter":"' + textstring + '", "sender":"js"}';
-            $.ajax({
-                type: 'POST',
-                url: api_url,
-                crossDomain: true,
-                //contentType: "application/json",
-                data: databody,
-                //dataType: 'json',
-                success: function (data) {
-                    console.log(JSON.stringify(data));
-                    data = JSON.parse(data);
-                    var textstring = JSON.stringify(data.message);
-                    textstring = textstring.replace('"', '');
-                    textstring = textstring.replace('"', '');
-                    document.getElementById("button-text").innerHTML = textstring;
-                },
-                error: function (responseData, textStatus, errorThrown) {
-                    console.log('POST failed.');
-                }
-            });
-        }
-
+        var textnum = parseInt(textstring);
+        textstring = textnum.toString()
+        var databody = '{"counter":"' + textstring + '", "sender":"js"}';
+        $.ajax({
+            type: 'POST',
+            url: api_url,
+            crossDomain: true,
+            //contentType: "application/json",
+            data: databody,
+            //dataType: 'json',
+            success: function (data) {
+                console.log(JSON.stringify(data));
+                data = JSON.parse(data);
+                var textstring = JSON.stringify(data.message);
+                textstring = textstring.replace('"', '');
+                textstring = textstring.replace('"', '');
+                document.getElementById("button-text").innerHTML = textstring;
+            },
+            error: function (responseData, textStatus, errorThrown) {
+                console.log('POST failed.');
+            }
+        });
     });
 </script>

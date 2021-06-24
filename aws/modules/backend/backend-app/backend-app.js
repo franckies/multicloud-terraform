@@ -25,7 +25,35 @@ exports.handler = async (event) => {
 				console.log("Error: ", err);
 				data = err;
 			}
+			
+			// If no counter exists, insert it.
+			if (data.Item == null) {
+				var params = {
+					TableName: 'counter-app-table',
+					Item: {
+						id: { N: "1" },
+						counter: { N: "1" }
+					}
 
+				};
+				try {
+					var rcv = await ddb.putItem(params).promise();
+					console.log("Item entered successfully:", rcv);
+					msg = 'Item entered successfully';
+				} catch (err) {
+					console.log("Error: ", err);
+					msg = err;
+				}
+				data = JSON.stringify({
+					message: {
+						Item: {
+							counter: {
+								N: "1"
+							}
+						}
+					}
+				});
+			}
 
 			var response = {
 				'statusCode': 200,
@@ -78,9 +106,9 @@ exports.handler = async (event) => {
 
 			// If multicloud is enable then sync aws azure cosmos db
 			if (multicloud && obj.sender != 'azure') {
-				await doPostRequest(counter_num-1) 
-				.then(result => console.log(`Status code: ${result}`))
-				.catch(err => console.error(`Error doing the request for the event: ${JSON.stringify(event)} => ${err}`));
+				await doPostRequest(counter_num - 1)
+					.then(result => console.log(`Status code: ${result}`))
+					.catch(err => console.error(`Error doing the request for the event: ${JSON.stringify(event)} => ${err}`));
 			}
 			var response = {
 				'statusCode': 200,
@@ -121,22 +149,22 @@ const doPostRequest = (counter) => {
 				'Content-Type': 'application/json',
 				'Content-Length': data.length
 			}
-	  };
-	  
-	  //create the request object with the callback with the result
-	  const req = https.request(options, (res) => {
-		resolve(JSON.stringify(res.statusCode));
-	  });
-  
-	  // handle the possible errors
-	  req.on('error', (e) => {
-		reject(e.message);
-	  });
-	  
-	  //do the request
-	  req.write(data);
-  
-	  //finish the request
-	  req.end();
+		};
+
+		//create the request object with the callback with the result
+		const req = https.request(options, (res) => {
+			resolve(JSON.stringify(res.statusCode));
+		});
+
+		// handle the possible errors
+		req.on('error', (e) => {
+			reject(e.message);
+		});
+
+		//do the request
+		req.write(data);
+
+		//finish the request
+		req.end();
 	});
-  };
+};

@@ -8,6 +8,11 @@ resource "azurerm_public_ip" "bastion" {
   domain_name_label   = "${var.prefix_name}-ssh"
   allocation_method   = "Static"
   sku                 = "Standard"
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
 }
 
 ################################################################################

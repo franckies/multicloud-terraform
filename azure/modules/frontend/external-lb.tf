@@ -1,3 +1,6 @@
+################################################################################
+# External load balancer
+################################################################################
 resource "azurerm_lb" "frontend" {
   name                = "${var.prefix_name}-lb"
   location            = var.resource_group.region
@@ -14,6 +17,7 @@ resource "azurerm_lb" "frontend" {
   }
 }
 
+# Backend pool for scale set.
 resource "azurerm_lb_backend_address_pool" "frontend" {
   loadbalancer_id = azurerm_lb.frontend.id
   name            = "${var.prefix_name}-BackEndAddressPool"

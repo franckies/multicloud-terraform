@@ -22,7 +22,7 @@ os_config = {
   sku       = "16.04-LTS"
   version   = "latest"
 }
-instances_num = 2
+instances_num        = 2
 ssh_private_key_path = "~/.ssh/id_rsa.pub"
 
 #============================= AWS VARS ========================================

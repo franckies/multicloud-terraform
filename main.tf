@@ -47,7 +47,7 @@ module "azure_infra" {
 
 module "aws_infra" {
   source        = "./aws/"
-  azure_api_url =   var.multicloud == true ? module.azure_infra.api_management_url : ""
+  azure_api_url = var.multicloud == true ? module.azure_infra.api_management_url : ""
   prefix_name   = var.prefix_name
 
   # Networking vars
@@ -73,7 +73,7 @@ module "aws_infra" {
 
 #============================= TRAFFIC MANAGER =================================
 resource "azurerm_traffic_manager_profile" "counter-app" {
-  count = var.multicloud == true ? 1 : 0
+  count               = var.multicloud == true ? 1 : 0
   name                = "${var.prefix_name}-multicloud"
   resource_group_name = var.resource_group.name
 
@@ -100,23 +100,23 @@ resource "azurerm_traffic_manager_profile" "counter-app" {
 }
 
 resource "azurerm_traffic_manager_endpoint" "counter-app-azure" {
-  count = var.multicloud == true ? 1 : 0
+  count               = var.multicloud == true ? 1 : 0
   name                = "${var.prefix_name}-azure"
   resource_group_name = var.resource_group.name
   profile_name        = azurerm_traffic_manager_profile.counter-app[count.index].name
   target              = module.azure_infra.load_balancer_dns
   type                = "externalEndpoints"
-  weight            = 100
+  weight              = 100
 }
 
 resource "azurerm_traffic_manager_endpoint" "counter-app-aws" {
-  count = var.multicloud == true ? 1 : 0
+  count               = var.multicloud == true ? 1 : 0
   name                = "${var.prefix_name}-aws"
   resource_group_name = var.resource_group.name
   profile_name        = azurerm_traffic_manager_profile.counter-app[count.index].name
   target              = module.aws_infra.load_balancer_dns
   type                = "externalEndpoints"
-  weight            = 100
+  weight              = 100
 }
 
 output "dns_name" {

@@ -14,38 +14,7 @@ module.exports = async function (context, req) {
 
             // If multicloud is enable then sync aws dynamo db
             if (multicloud) {
-                const https = require('https')
-
-                const data = JSON.stringify({
-                    counter: 1,
-                    sender: 'azure'
-                })
-                var aws_host = process.env["aws_api"].split("/");
-                const options = {
-                    hostname: aws_host[2],
-                    port: 443,
-                    path: '/' + aws_host[3] + '/counter-app-resource',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Content-Length': data.length
-                    }
-                }
-
-                const request = https.request(options, res => {
-                    console.log(`statusCode: ${res.statusCode}`)
-
-                    res.on('data', d => {
-                        process.stdout.write(d)
-                    })
-                })
-
-                request.on('error', error => {
-                    console.error(error)
-                })
-
-                request.write(data)
-                request.end()
+                doPostRequest(1);
             }
 
             responseMessage = JSON.stringify({
@@ -70,38 +39,7 @@ module.exports = async function (context, req) {
 
             // If multicloud is enable then sync aws dynamo db
             if (multicloud && req.body.sender != 'aws') {
-                const https = require('https')
-
-                const data = JSON.stringify({
-                    counter: parseInt(counter),
-                    sender : 'azure'
-                })
-                var aws_host = process.env["aws_api"].split("/");
-                const options = {
-                    hostname: aws_host[2],
-                    port: 443,
-                    path: '/' + aws_host[3] + '/counter-app-resource',
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Content-Length': data.length
-                    }
-                }
-
-                const request = https.request(options, res => {
-                    console.log(`statusCode: ${res.statusCode}`)
-
-                    res.on('data', d => {
-                        process.stdout.write(d)
-                    })
-                })
-
-                request.on('error', error => {
-                    console.error(error)
-                })
-
-                request.write(data)
-                request.end()
+                doPostRequest(parseInt(counter));
             }
 
             context.res = {
@@ -128,8 +66,43 @@ module.exports = async function (context, req) {
             };
             return;
         }
-    } 
+    }
     catch (err) {
         console.log(err)
     }
+}
+
+const doPostRequest = (counter) => {
+    const https = require('https')
+
+    const data = JSON.stringify({
+        counter: counter,
+        sender: 'azure'
+    })
+    var aws_host = process.env["aws_api"].split("/");
+    const options = {
+        hostname: aws_host[2],
+        port: 443,
+        path: '/' + aws_host[3] + '/counter-app-resource',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': data.length
+        }
+    }
+
+    const request = https.request(options, res => {
+        console.log(`statusCode: ${res.statusCode}`)
+
+        res.on('data', d => {
+            process.stdout.write(d)
+        })
+    })
+
+    request.on('error', error => {
+        console.error(error)
+    })
+
+    request.write(data)
+    request.end()
 }
