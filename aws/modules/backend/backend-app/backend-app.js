@@ -45,14 +45,13 @@ exports.handler = async (event) => {
 					msg = err;
 				}
 				data = JSON.stringify({
-					message: {
 						Item: {
 							counter: {
 								N: "1"
 							}
 						}
-					}
 				});
+				data = JSON.parse(data)
 			}
 
 			var response = {
