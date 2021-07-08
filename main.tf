@@ -81,7 +81,7 @@ resource "azurerm_traffic_manager_profile" "counter-app" {
 
   dns_config {
     relative_name = "counter-app-multicloud"
-    ttl           = 100
+    ttl           = 0 #100
   }
 
   monitor_config {
