@@ -7,9 +7,11 @@ Terraform is not a configuration management tool, but for simple scenarios it ca
 - For the backend part, the serverless function code is zipped and deployed to the function directly using terraform functionalities.
 
 The web application simply consists of a fancy button, colored in blue for Azure and in orange for Aws, which displays a counter that is incremented each time the button is pressed. Behind the hood, the frontend javascript executes REST calls to the backend serverless function, which is in charge of actually increasing the counter value and storing it into a managed database. 
+
 ![appdesign](./images/application-design.png)
 
 A simple _use case_ diagram for the application can be found below.
+
 ![uc](./images/uc-application.png)
 
 ## The infrastructure
@@ -20,7 +22,8 @@ Independently on the CSP, the infrastructure under study is an high available *3
 
 The architecture is intended to be an *closed layered architecture*, i.e. each layer can interact only with the layer just below it. 
 
-For both CSPs, the infrastructure has been designed to be highly available, exploiting the concepts of _automatic scaling out_ the frontend servers, which are connected to a load balancer exposing the service to the internet. Moreover, the servers are split on two different _availability zone_ eliminating downtime due to zone-wide failures.
+For both CSPs, the infrastructure has been designed to be highly available, exploiting the concepts of _automatic scaling out_ the frontend servers, which are connected to a load balancer exposing the service to the internet. Moreover, the servers are split on two different _availability zone_ eliminating downtime due to zone-wide failures. 
+
 ![infra](./images/infrastructure.png)
 
 # Aws
